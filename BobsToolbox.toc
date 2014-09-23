@@ -1,0 +1,43 @@
+## Author: Bobby Cannon
+## DefaultState: Enabled
+## eMail: bobby.cannon@live.com
+## Interface: 40300
+## LoadOnDemand: 0
+## Notes: The goal of BobsToolbox is to combines all the really great and needed addons into one very efficient addon.
+## OptionalDeps: Clique
+## RequiredDeps: Ace3
+## SavedVariables: GlobalSettings,ZoneProfiles
+## Title: BobsToolbox
+## URL: http://bobbycannon.com
+## Version: 4.3.0.3
+Libraries\BobbyCode.xml
+Templates\BobsCastingBar.lua
+Templates\BobsCastingBarBlockTemplate.lua
+Templates\BobsCastingBarDefaultTemplate.lua
+Templates\BobsCastingBarThinTemplate.lua
+Templates\BobsRotationMageTemplate.lua
+Templates\BobsRotationPaladinTemplate.lua
+Templates\BobsRotationPriestTemplate.lua
+Templates\BobsRotationRogueTemplate.lua
+Templates\BobsRotationWarlockTemplate.lua
+Templates\BobsUnitButton.lua
+Templates\BobsUnitButtonBadgeTemplate.lua
+Templates\BobsUnitButtonRectangleTemplate.lua
+Templates\BobsUnitButtonSquareTemplate.lua
+Templates\BobsUnitButtonPlayerHudTemplate.lua
+Templates\BobsUnitButtonTargetHudTemplate.lua
+BobsPresets.lua
+BobsSettings.lua
+BobsDebugFrame.lua
+BobsExtraPowerFrame.lua
+BobsMinimapButtonFrame.lua
+BobsRotationFrame.lua
+BobsLootFrame.lua
+BobsMissingBuffsFrame.lua
+BobsHudFrame.lua
+BobsPlayerFrame.lua
+BobsPlayerCastBarFrame.lua
+BobsTargetFrame.lua
+BobsTargetCastBarFrame.lua
+BobsGroupFrame.lua
+BobsToolbox.lua
