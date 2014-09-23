@@ -1,6 +1,13 @@
 ﻿-- BobsToolbox Change Log
 -- The change log lists changes of particular note to users, not every change made.
 --
+--5.3.0.0
+--
+-- 
+--
+--5.0.0.0
+-- Rebooting of BobsToolbox. It's time for something different!
+--
 --4.3.0.3
 -- Started working on Warlock rotation frame.
 -- Started working on rogue rotation frame.
