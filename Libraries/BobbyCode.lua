@@ -54,6 +54,7 @@ BobbyCode =
 		ShadowOrbs			= "Interface\\Icons\\spell_priest_shadoworbs",
 		WarlockShard		= "Interface\\PlayerFrame\\UI-WarlockShard",
 		PaladinPower		= "Interface\\PlayerFrame\\PaladinPowerTextures",
+		MonkOrbs			= "Interface\\PlayerFrame\\MonkUI",
 		HordeButton			= "Interface\\PlayerActionBarAlt\\SpellBar-HordeBtn",
 	},
 };
@@ -125,8 +126,8 @@ function BobbyCode:ShowBackground(frame, show)
 	if (show) then
 		frame:SetBackdrop({bgFile = BobbyCode.Texture.DialogBackground, edgeFile = BobbyCode.Texture.DialogBorder, 
 			tile = true, tileSize = 16, edgeSize = 8, insets = { left = 0, right = 0, top = 0, bottom = 0 } });
-		frame:SetBackdropColor(0, 0, 0, 1);
-		local color = frame.BackgroundColor or { r = 0, g = 0, b = 0, a = 1 };
+		frame:SetBackdropColor(0, 0, 0, 0.5);
+		local color = frame.BackgroundColor or { r = 0, g = 0, b = 0, a = 0.5 };
 		frame:SetBackdropBorderColor(color.r, color.g, color.b, color.a);
 	else
 		frame:SetBackdrop({bgFile = "", edgeFile = ""});
@@ -283,8 +284,8 @@ function BobbyCode:GetUnitClass(unit)
 	if (UnitIsPlayer(unit)) then
 		return class, color;
 	end
-	
 	local creatureFamily = UnitCreatureFamily(unit);
+	
 	if (creatureFamily ~= nil) then
 		return creatureFamily, color;
 	end

@@ -23,7 +23,7 @@ function BobsPlayerFrame:Initialize()
 end
 
 function BobsPlayerFrame:ApplySettings()
-	--BobsPlayerFrame:SetupMouseOver(true);
+	BobsPlayerFrame:SetupMouseOver(true);
 	BobsPlayerFrame:UpdateRaidIcon();
 
 	BobsPlayerFrame:MoveStuff();
@@ -40,12 +40,13 @@ function BobsPlayerFrame:MoveStuff()
 end
 
 function BobsPlayerFrame:HideStuff()
-	--local targetting = UnitExists("target");
-	--if (not BobsToolboxSettings.LayoutMode and not InCombatLockdown() and not targetting) then 
-	--	PlayerFrame:SetAlpha(0);
-	--else
-	--	PlayerFrame:SetAlpha(100);
-	--end
+	local targetting = UnitExists("target");
+	local percent = BobbyCode:GetUnitHealthPercentage("player");
+	if (percent >= 100 and not BobsToolboxSettings.LayoutMode and not InCombatLockdown() and not targetting) then 
+		PlayerFrame:SetAlpha(0);
+	else
+		PlayerFrame:SetAlpha(100);
+	end
 end
 
 function BobsPlayerFrame:UpdateRaidIcon()

@@ -157,31 +157,33 @@ function BobsRotationFrame:SpellIsReady(spellToCheck, skipSpell, globalCooldown)
 		return false;
 	end
 	
-	local start, duration = GetSpellCooldown(spellToCheck);
+	local start, duration, enabled = GetSpellCooldown(spellToCheck);
+	if (not enabled) then
+		return false;
+	end
+	
 	if (start == 0) then
 		return true;
 	end
 
-	if (duration == globalCooldown) then
-		return true;
-	end
 	
 	if (globalCooldown) then
-		return ((start + duration) - GetTime()) <= globalCooldown;
+		local remainingTime = (start + duration) - GetTime();
+		return remainingTime <= globalCooldown;
 	end
 
 	return false;
 end
 
 function BobsRotationFrame:GetGlobalCooldown()
-	local ush = UnitSpellHaste("player");
-	local hv = ush / 100 + 1;
-	local gcd = 1.5 / hv;
-	if (gcd < 1) then
-	   gcd = 1;
+	local spellHasteModifier = 1 + (UnitSpellHaste("player") / 100)
+	local globalCooldown = floor(1.5 / spellHasteModifier)
+	
+	if (globalCooldown < 1) then
+	   globalCooldown = 1;
 	end
 
-	return gcd;
+	return globalCooldown;
 end
 
 function BobsRotationFrame:CheckForBuff(name)
@@ -207,7 +209,7 @@ function BobsRotationFrame:CheckForPlayerDebuff(name)
 end
 
 -- Returns true if you need the buff.
-function BobsRotationFrame:CheckBuff(name, skipSpell, globalCooldown)
+function BobsRotationFrame:CheckBuff(name, skipSpell, threshold)
 	-- Check to see if the spell is usable and that it's not the spell to skip.
 	if (name == skipSpell) or (name == BobsRotationFrame.CurrentlyCasting) then
 		-- The spell is not usable or should be skipped.
@@ -223,14 +225,14 @@ function BobsRotationFrame:CheckBuff(name, skipSpell, globalCooldown)
 
 	-- Calculate the time left.
 	if (expirationTime ~= nil) then
-		return (expirationTime - GetTime()) <= globalCooldown;
+		return (expirationTime - GetTime()) <= threshold;
 	end
 	
 	-- This buff is not available.
 	return false;
 end
 
-function BobsRotationFrame:CheckDebuff(name, skipSpell, globalCooldown)
+function BobsRotationFrame:CheckDebuff(name, skipSpell, threshold)
 	-- Check to see if the spell is usable and that it's not the spell to skip.
 	if (name == skipSpell) or (name == BobsRotationFrame.CurrentlyCasting) then
 		-- The spell is not usable or should be skipped.
@@ -248,7 +250,7 @@ function BobsRotationFrame:CheckDebuff(name, skipSpell, globalCooldown)
 	
 	-- Calculate the time left.
 	if (expirationTime ~= nil) then
-		return (expirationTime - GetTime()) <= globalCooldown;
+		return (expirationTime - GetTime()) <= threshold;
 	end
 	
 	-- This debuff is good.

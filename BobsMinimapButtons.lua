@@ -57,7 +57,7 @@ function BobsMinimapButtons:GrabButtons(frame)
 
 	for _, button in pairs(buttons) do
 		buttonName = button:GetName();
-				
+		
 		-- Make sure the button name is not null.
 		if (buttonName ~= nil) then
 			-- Check to see if we already have this button.
@@ -66,6 +66,8 @@ function BobsMinimapButtons:GrabButtons(frame)
 			elseif (BobbyCode:TableContains(BlockedButtons, buttonName)) then
 				-- Do nothing because the button is blocked.
 			elseif (strfind(buttonName, "GatherNote") == 1) then
+				-- Do nothing because this is a gatherer note.
+			elseif (strfind(buttonName, "GatherMate") == 1) then
 				-- Do nothing because this is a gatherer note.
 			elseif button:HasScript("OnClick") and button:IsShown() then
 				BobsMinimapButtons.Buttons[buttonName] = button;

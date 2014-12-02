@@ -14,57 +14,64 @@ function BobsRotationPriestTemplate:GetNextSpell(skipSpell)
 	if (skipSpell == nil) then
 		globalCooldown = 0;
 	end
-
-	local surgeOfDarkness = BobsRotationFrame:CheckForBuff("Surge of Darkness");
-	if (BobsRotationFrame:SpellIsReady("Mind Spike", skipSpell, globalCooldown)) and (surgeOfDarkness > 0) then
-		return "Mind Spike";
+	
+	if (BobsRotationFrame:SpellIsReady("Devouring Plague", nil, globalCooldown)) then
+		local orbs = UnitPower("player", SPELL_POWER_SHADOW_ORBS);
+		if (orbs >= 3) {
+			return "Devouring Plague";
+		}
 	end
-		
+	
 	if (BobsRotationFrame:SpellIsReady("Mind Blast", skipSpell, globalCooldown)) then
 		return "Mind Blast";
 	end
 	
 	if (BobsRotationFrame:SpellIsReady("Shadow Word: Death", skipSpell, globalCooldown)) then
         local healthLeft = UnitHealth("target") / UnitHealthMax("target");
-        local manaLeft = UnitPower("player") / UnitPowerMax("player");
-               
-        if (healthLeft <= 0.25) or (manaLeft <= 0.25) then
+        if (healthLeft <= 0.25) then
             return "Shadow Word: Death";
         end
-	end
+	end	
 		
-	if (BobsRotationFrame:CheckDebuff("Shadow Word: Pain", skipSpell, globalCooldown)) then
+	if (BobsRotationFrame:CheckDebuff("Shadow Word: Pain", skipSpell, 5)) then
 		return "Shadow Word: Pain";
     end
 
-    if (BobsRotationFrame:CheckDebuff("Vampiric Touch", skipSpell, globalCooldown)) then
+    if (BobsRotationFrame:CheckDebuff("Vampiric Touch", skipSpell, 4)) then
    		return "Vampiric Touch";
     end
+	
+	if (BobsRotationFrame:SpellIsReady("Insanity", skipSpell, globalCooldown)) then
+		return "Insanity";
+	end
 	
 	return "Mind Flay";
 end
 
 function BobsRotationPriestTemplate:GetExtraSpell()
 	local globalCooldown = BobsRotationFrame:GetGlobalCooldown();
-	local orbs = UnitPower("player", SPELL_POWER_SHADOW_ORBS);
 	
-	if (orbs == 3) and (BobsRotationFrame:SpellIsReady("Devouring Plague", nil, globalCooldown)) then
-		return "Devouring Plague";
-	end
-
-	if BobsRotationFrame:SpellIsReady("Halo", nil, globalCooldown) then
+	if (BobsRotationFrame:CheckBuff("Power Word: Fortitude", nil, globalCooldown)) then
+		return "Power Word: Fortitude";
+    end
+	
+	if (BobsRotationFrame:SpellIsReady("Halo", nil, globalCooldown)) then
 		return "Halo";
 	end
 
-	if BobsRotationFrame:SpellIsReady("Shadowfiend", nil, globalCooldown) then
+	if (BobsRotationFrame:SpellIsReady("Shadowfiend", nil, globalCooldown)) then
 		return "Shadowfiend";
 	end
+	
+	if (BobsRotationFrame:SpellIsReady("Mindbender", nil, globalCooldown)) then
+		return "Mindbender";
+	end
 
-	if BobsRotationFrame:SpellIsReady("Power Infusion", nil, globalCooldown) then
+	if (BobsRotationFrame:SpellIsReady("Power Infusion", nil, globalCooldown)) then
 		return "Power Infusion";
 	end
 
-	if BobsRotationFrame:SpellIsReady("Lifeblood", nil, globalCooldown) then
+	if (BobsRotationFrame:SpellIsReady("Lifeblood", nil, globalCooldown)) then
 		return "Lifeblood";
 	end
 end
@@ -107,7 +114,7 @@ end
 function BobsRotationRogueTemplate:GetExtraSpell()
 	local globalCooldown = BobsRotationFrame:GetGlobalCooldown();
 
-	if BobsRotationFrame:SpellIsReady("Vendetta", nil, globalCooldown) then
+	if (BobsRotationFrame:SpellIsReady("Vendetta", nil, globalCooldown)) then
 		return "Vendetta";
 	end
 end

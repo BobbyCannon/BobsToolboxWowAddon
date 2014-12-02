@@ -22,15 +22,6 @@ function BobsHudFrame:Initialize()
 	BobbyCode:SetLabelFont(BobsHudFrame.ThreatLabel, BobbyCode.Color.White, 12, true);
 	BobsHudFrame.ThreatLabel:SetPoint("TOPRIGHT", BobsHudFrame, "TOPRIGHT", -10, 0);
 
-	BobsHudFrame.PlayerHealthBar = BobsUnitBar_Create(BobsHudFrame, "player", "LEFT", 0);
-	BobsHudFrame.PlayerHealthBar:Hide();
-    BobsHudFrame.PlayerPowerBar = BobsUnitBar_Create(BobsHudFrame, "player", "RIGHT", 0);
-	BobsHudFrame.PlayerPowerBar:Hide();
-    BobsHudFrame.TargetHealthBar = BobsUnitBar_Create(BobsHudFrame, "target", "LEFT", -16);
-	BobsHudFrame.TargetHealthBar:Hide();
-    BobsHudFrame.TargetPowerBar = BobsUnitBar_Create(BobsHudFrame, "target", "RIGHT", 16);
-	BobsHudFrame.TargetPowerBar:Hide();
-
 	BobsHudFrame.Icon = BobsHudFrame:CreateTexture(nil, "ARTWORK");
 	BobsHudFrame.Icon:SetHeight(16);
 	BobsHudFrame.Icon:SetWidth(16);
@@ -52,10 +43,10 @@ function BobsHudFrame:Update()
 	BobsHudFrame:UpdateThreat();
 	BobsHudFrame:UpdateTargetCount();
 	BobsHudFrame:UpdateTargetRaidIcon();
-	BobsHudFrame.PlayerHealthBar:UpdateHealth();
-	BobsHudFrame.PlayerPowerBar:UpdatePower();
-    BobsHudFrame.TargetHealthBar:UpdateHealth();
-	BobsHudFrame.TargetPowerBar:UpdatePower();
+	--BobsHudFrame.PlayerHealthBar:UpdateHealth();
+	--BobsHudFrame.PlayerPowerBar:UpdatePower();
+    --BobsHudFrame.TargetHealthBar:UpdateHealth();
+	--BobsHudFrame.TargetPowerBar:UpdatePower();
 end
 
 function BobsHudFrame:UpdateTargetRaidIcon()
@@ -160,27 +151,27 @@ end
 BobsHudFrame:SetScript("OnEvent", BobsHudFrame.OnEvent);
 
 function BobsHudFrame:Timer()
-	if (UnitIsDeadOrGhost("player")) then
-		BobsHudFrame.PlayerHealthBar:Hide();
-		BobsHudFrame.PlayerPowerBar:Hide();
-	end
+	-- if (UnitIsDeadOrGhost("player")) then
+		-- BobsHudFrame.PlayerHealthBar:Hide();
+		-- BobsHudFrame.PlayerPowerBar:Hide();
+	-- end
     
-    if (UnitIsDeadOrGhost("player") and (not UnitExists("target"))) then
-		BobsHudFrame.TargetHealthBar:Hide();
-		BobsHudFrame.TargetPowerBar:Hide();
-	end
+    -- if (UnitIsDeadOrGhost("player") and (not UnitExists("target"))) then
+		-- BobsHudFrame.TargetHealthBar:Hide();
+		-- BobsHudFrame.TargetPowerBar:Hide();
+	-- end
         
 	if (UnitExists("target")) then
 		BobsHudFrame:UpdateTargetCount();
 	end
 	
-	if (BobsHudFrame.PlayerPowerNotFull) then
-		BobsHudFrame.PlayerPowerBar:UpdatePower();
-	end
+	--if (BobsHudFrame.PlayerPowerNotFull) then
+	--	BobsHudFrame.PlayerPowerBar:UpdatePower();
+	--end
 		
-	if UnitExists("target") and BobsHudFrame.TargetPowerNotFull then
-		BobsHudFrame.TargetPowerBar:UpdatePower();
-	end	
+	--if UnitExists("target") and BobsHudFrame.TargetPowerNotFull then
+	--	BobsHudFrame.TargetPowerBar:UpdatePower();
+	--end	
 	
 	if (UnitExists("target")) then
 		local alpha = outOfRangeAlpha;
@@ -189,8 +180,8 @@ function BobsHudFrame:Timer()
 			alpha = 1;
 		end	
 			
-		BobsHudFrame.TargetHealthBar:SetAlpha(alpha);
-		BobsHudFrame.TargetPowerBar:SetAlpha(alpha);
+		--BobsHudFrame.TargetHealthBar:SetAlpha(alpha);
+		--BobsHudFrame.TargetPowerBar:SetAlpha(alpha);
 	end
 
 	if InCombatLockdown() or UnitExists("target") then

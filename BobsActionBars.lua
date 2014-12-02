@@ -251,7 +251,7 @@ function BobsActionBars:Timer()
 		end
 	end
 	
-	if (f:GetName() == "WorldFrame") then
+	if (f == WorldFrame) then
 		StanceBarFrame.FadeOut = 1;
 
 		if (BobsToolboxSettings.ActionBars.HideMainBarOutOfCombat) then

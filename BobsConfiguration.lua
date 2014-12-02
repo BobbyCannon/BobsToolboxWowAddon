@@ -28,7 +28,7 @@ BobsToolboxSettingsDefaults = {
 BobsToolboxSettings = {}
 
 function BobsConfiguration:Initialize()
-	BobsConfiguration.BackgroundColor = { r = 0.3, g = 0.3, b = 0.3, a = 1 };
+	BobsConfiguration.BackgroundColor = { r = 0.3, g = 0.3, b = 0.3, a = 0.5 };
 	BobsConfiguration:ShowBackground(true);
 	BobsConfiguration:ClearAllPoints();
 	BobsConfiguration:SetPoint("CENTER");
@@ -36,7 +36,7 @@ function BobsConfiguration:Initialize()
 	BobsConfiguration:EnableDragging();
 	BobsConfiguration:SetFrameLevel(20);
 	
-	local header = BobsConfiguration:CreateLabel(nil, addonName .. ": Configuration", BobbyCode.Color.Gray);
+	local header = BobsConfiguration:CreateLabel(nil, addonName .. ": Configuration", BobbyCode.Color.DarkGreen);
 	header:SetPoint("TOPLEFT", 7, -6);
 
 	local closeButton = CreateFrame("Button", "test", BobsConfiguration, "UIPanelCloseButton");

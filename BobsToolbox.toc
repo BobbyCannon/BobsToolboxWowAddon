@@ -1,8 +1,8 @@
 ## Author: Bobby Cannon
-## Interface: 50300
+## Interface: 60000
 ## Notes: The goal of BobsToolbox is to combines all the really great and needed addons into one very efficient addon.
 ## Title: BobsToolbox
-## Version: 5.3.0.2
+## Version: 6.0.1
 ## DefaultState: Enabled
 ## eMail: bobby.cannon@live.com
 ## LoadOnDemand: 0
@@ -14,10 +14,8 @@ BobsChatWindow.lua
 BobsConfiguration.lua
 BobsCooldownFrame.lua
 BobsExtraPowerFrame.lua
-BobsFocusFrame.lua
 BobsHudFrame.lua
 BobsMinimapButtons.lua
-BobsPartyFrame.lua
 BobsPlayerFrame.lua
 BobsRotationFrame.lua
 BobsTargetFrame.lua
