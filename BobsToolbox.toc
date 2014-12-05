@@ -2,7 +2,7 @@
 ## Interface: 60000
 ## Notes: The goal of BobsToolbox is to combines all the really great and needed addons into one very efficient addon.
 ## Title: BobsToolbox
-## Version: 6.0.1
+## Version: 6.0.4
 ## DefaultState: Enabled
 ## eMail: bobby.cannon@live.com
 ## LoadOnDemand: 0

@@ -23,16 +23,15 @@ BobsToolbox.Description = "Email comments, suggestions and bug reports to bobby.
 BobsToolbox.Tasks = {};
 BobsToolbox.OptionFrames = {};
 BobsToolbox.Tools = {
-	--BobsActionBars, 
-	--BobsChatWindow, 
-	--BobsCooldownFrame, 
-	--BobsExtraPowerFrame, 
-	--BobsHudFrame, 
+	BobsActionBars, 
+	BobsChatWindow, 
+	BobsCooldownFrame, 
+	BobsExtraPowerFrame, 
+	BobsHudFrame, 
 	BobsMinimapButtons, 
-	--BobsPartyFrame, 
 	BobsPlayerFrame, 
-	--BobsRotationFrame, 
-	--BobsTargetFrame
+	BobsRotationFrame, 
+	BobsTargetFrame
 };
 
 ClickCastFrames = ClickCastFrames or {}

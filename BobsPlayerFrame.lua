@@ -16,8 +16,7 @@ local OldPlayerFrameOnLeave = PlayerFrame:GetScript("OnLeave");
 	PlayerFrame.RaidTargetIcon:SetHeight(26);
 	PlayerFrame.RaidTargetIcon:SetWidth(26);
 	PlayerFrame.RaidTargetIcon:Hide();
-	PlayerFrame.FadeOut = false;
-	PlayerFrame.FadedOut = true;
+	PlayerFrame.FadeLevel = 0;
 	PlayerFrame:SetAlpha(0);
 
 	for eventname, _ in pairs(UnitEventHandlers) do 
@@ -25,9 +24,7 @@ local OldPlayerFrameOnLeave = PlayerFrame:GetScript("OnLeave");
 	end
 	
 	PlayerFrame:SetScript("OnEnter", function(self) 
-		PlayerFrame.FadeOut = false;
-		PlayerFrame.FadedOut = false;
-		PlayerFrame:SetAlpha(1.0);
+		BobsPlayerFrame:Unfade();
 		OldPlayerFrameOnEnter(PlayerFrame);
 	end);
 	
@@ -39,15 +36,20 @@ function BobsPlayerFrame:ApplySettings()
 	BobsPlayerFrame:MoveStuff();
 end
 
-function BobsPlayerFrame:StartFade()
-	PlayerFrame.FadeOut = true;
-	PlayerFrame.FadedOut = false;
+function BobsPlayerFrame:UpdateState()
+	local healthPercent = BobbyCode:GetUnitHealthPercentage("player");
+	if (UnitExists("target") or healthPercent < 100) then
+		BobsPlayerFrame:Unfade();
+		return;
+	end
+	
+	if (PlayerFrame.FadeLevel == 0) then
+		PlayerFrame.FadeLevel = PlayerFrame:GetAlpha();
+	end
 end
 
-function BobsPlayerFrame:Unhide()
-	PlayerFrame.FadeOut = false;
-	PlayerFrame.FadedOut = false;
-	PlayerFrame:SetAlpha(1.0) 
+function BobsPlayerFrame:Unfade()
+	BobbyCode:Unfade(PlayerFrame);
 end
 
 function BobsPlayerFrame:MoveStuff()
@@ -77,31 +79,22 @@ end
 end
 
 UnitEventHandlers.RAID_TARGET_UPDATE = BobsPlayerFrame.UpdateRaidIcon;
-UnitEventHandlers.PLAYER_REGEN_DISABLED = BobsPlayerFrame.Unhide;
-UnitEventHandlers.PLAYER_REGEN_ENABLED = BobsPlayerFrame.StartFade;
-UnitEventHandlers.PLAYER_TARGET_CHANGED = function ()
-	if (UnitExists("target")) then 
-		BobsPlayerFrame:Unhide();
-	else
-		BobsPlayerFrame:StartFade();
-	end
-end;
+UnitEventHandlers.PLAYER_REGEN_DISABLED = BobsPlayerFrame.Unfade;
+UnitEventHandlers.PLAYER_REGEN_ENABLED = BobsPlayerFrame.UpdateState;
+UnitEventHandlers.PLAYER_TARGET_CHANGED = BobsPlayerFrame.UpdateState;
+UnitEventHandlers.UNIT_HEALTH = BobsPlayerFrame.UpdateState;
 
 BobsPlayerFrame:SetScript("OnEvent", BobsPlayerFrame.OnEvent);
 
 function BobsPlayerFrame:Timer()	
-	if (InCombatLockdown() or PlayerFrame.FadedOut) then
+	if (InCombatLockdown()) then
 		return;
 	end
 
 	BobbyCode:FadeRegion(PlayerFrame);
-	
-	if (UnitExists("target")) then
-		return;
-	end
-	
+		
 	local f = GetMouseFocus();
 	if (f == WorldFrame) then
-		BobsPlayerFrame:StartFade();
+		BobsPlayerFrame:UpdateState();
 	end
 end

@@ -74,20 +74,36 @@ function BobbyCode:CreateFrame(name, parent, template)
     return frame;
 end
 
+function BobbyCode:Unfade(region)
+	region.FadeLevel = 0;
+	region:SetAlpha(1.0) 
+	
+	if (region.ShowChildren) then
+		region:ShowChildren();
+	end
+end
+
+function BobbyCode:StartFade(region)
+	if (region.FadeLevel == 0) then
+		region.FadeLevel = region:GetAlpha();
+	end
+end
+
 function BobbyCode:FadeRegion(region)
-	if (not region.FadeOut or region.FadedOut) then
+	if (region.FadeLevel <= 0) then
 		return;
 	end
 	
-	local a = region:GetAlpha();
-	local newA = a - (1/20);
-	if (newA <= 0) then
-		newA = 0;
-		region.FadeOut = false;
-		region.FadedOut = true;
+	region.FadeLevel = region:GetAlpha() - (1/20);
+	if (region.FadeLevel <= 0) then
+		region.FadeLevel = 0;
+		
+		if (region.HideChildren) then
+			region:HideChildren();
+		end
 	end
 		
-	region:SetAlpha(newA);
+	region:SetAlpha(region.FadeLevel);
 end
 
 function BobbyCode:AddFrameFunctions(frame)

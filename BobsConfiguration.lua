@@ -69,6 +69,8 @@ function BobsConfiguration:SaveChanges()
 	BobsToolboxSettings.ActionBars.HideMultiBarRightOutOfCombat = _G[name .. "HideMultiBarRightOutOfCombat"]:GetChecked();
 	BobsToolboxSettings.ActionBars.HideMultiBarBottomLeftOutOfCombat = _G[name .. "HideMultiBarBottomLeftOutOfCombat"]:GetChecked();
 	BobsToolboxSettings.ActionBars.HideMultiBarBottomRightOutOfCombat = _G[name .. "HideMultiBarBottomRightOutOfCombat"]:GetChecked();
+
+	BobsToolbox:ApplySettings();
 end
 
 function BobsConfiguration:GetChecked(checkbox)
