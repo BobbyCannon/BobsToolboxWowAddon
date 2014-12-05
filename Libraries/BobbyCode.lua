@@ -6,6 +6,7 @@ BobbyCode =
 		Red				= "|cffff0000",
 		Green			= "|cff00ff00",
 		DarkGreen		= "|cff009900",
+		LightGray		= "|cffcccccc",
 		Gray			= "|cff808080",
 	},
 	Color = {
@@ -15,8 +16,10 @@ BobbyCode =
 		Green		= { r = 0.0, g = 1.0, b = 0.0, a = 1 },
 		DarkGreen	= { r = 0.0, g = 0.6, b = 0.0, a = 1 },
 		Red			= { r = 1.0, g = 0.0, b = 0.0, a = 1 },
+		LightGray	= { r = 0.5, g = 0.5, b = 0.5, a = 1 },
 		Gray		= { r = 0.5, g = 0.5, b = 0.5, a = 1 },
 		Purple		= { r = 1.0, g = 0.0, b = 1.0, a = 1 },
+		DarkYellow	= { r = 1.0, g = 0.8, b = 0.0, a = 1 },
 		Yellow		= { r = 1.0, g = 1.0, b = 0.0, a = 1 },
 		Cyan		= { r = 0.0, g = 1.0, b = 1.0, a = 1 },
 	},
@@ -71,17 +74,36 @@ function BobbyCode:CreateFrame(name, parent, template)
     return frame;
 end
 
+function BobbyCode:FadeRegion(region)
+	if (not region.FadeOut or region.FadedOut) then
+		return;
+	end
+	
+	local a = region:GetAlpha();
+	local newA = a - (1/20);
+	if (newA <= 0) then
+		newA = 0;
+		region.FadeOut = false;
+		region.FadedOut = true;
+	end
+		
+	region:SetAlpha(newA);
+end
+
 function BobbyCode:AddFrameFunctions(frame)
 	frame.CreateLabel = function(self, name, text, color, size, thick)
 		return BobbyCode:CreateLabel(self, name, text, color, size, thick);
 	end
 
 	frame.CreateCheckbox = function(self, name, text, tooltip)
-		local button = CreateFrame("CheckButton", self:GetName() .. name, self, "ChatConfigCheckButtonTemplate");
+		local button = CreateFrame("CheckButton", self:GetName() .. name, self, "InterfaceOptionsCheckButtonTemplate");
 		_G[self:GetName() .. name .. "Text"]:SetText(text);
 		if (tooltip) then
 			button.tooltip = tooltip;
 		end
+		button:SetScript("OnClick", function(self)
+			PlaySound(self:GetChecked() and "igMainMenuOptionCheckBoxOn" or "igMainMenuOptionCheckBoxOff")
+		end);
 		return button;
 	end
 

@@ -23,8 +23,16 @@ BobsToolbox.Description = "Email comments, suggestions and bug reports to bobby.
 BobsToolbox.Tasks = {};
 BobsToolbox.OptionFrames = {};
 BobsToolbox.Tools = {
-	BobsActionBars, BobsChatWindow, BobsCooldownFrame, BobsExtraPowerFrame, BobsHudFrame, BobsMinimapButtons, BobsPartyFrame, 
-	BobsPlayerFrame, BobsRotationFrame, BobsTargetFrame
+	--BobsActionBars, 
+	--BobsChatWindow, 
+	--BobsCooldownFrame, 
+	--BobsExtraPowerFrame, 
+	--BobsHudFrame, 
+	BobsMinimapButtons, 
+	--BobsPartyFrame, 
+	BobsPlayerFrame, 
+	--BobsRotationFrame, 
+	--BobsTargetFrame
 };
 
 ClickCastFrames = ClickCastFrames or {}
@@ -67,11 +75,6 @@ function UnitEventHandlers:PLAYER_REGEN_ENABLED()
 	end
 end
 
-function BobsToolbox:PrintCommands()
-	BobbyCode:Print(BobbyCode.ChatColor.DarkGreen, BobsToolbox.Name .. " v" .. BobsToolbox.Version);
-	BobbyCode:Print("    reset  : Reset the configuration to defaults.");
-end
-
 --
 -- Creates the minimap icon
 --
@@ -80,14 +83,11 @@ function BobsToolbox:CreateIcon()
 		type = "launcher",
 		label = addonName,
 		OnClick = function(self, button)
-			if (button == "LeftButton") then
-				-- Toggle Layout
-				BobsToolbox:ApplySettings();
-			elseif (button == "RightButton") then
-				if (not InCombatLockdown()) then
-					-- Show Configuration!
-					BobsConfiguration:Show();
-				end
+			if (not InCombatLockdown()) then
+				-- Doing this once isn't enough if the configuration has never been
+				-- opened. Doing it twice so we always land on the configuration page.
+				InterfaceOptionsFrame_OpenToCategory(BobsConfiguration);
+				InterfaceOptionsFrame_OpenToCategory(BobsConfiguration);
 			end
 		end,
 		icon = "Interface\\AddOns\\BobsToolbox\\Textures\\BobsToolbox",
@@ -188,10 +188,21 @@ BobsToolbox:SetScript("OnUpdate", BobsToolbox.OnUpdate);
 
 SLASH_BOBSTOOLBOX1, SLASH_BOBSTOOLBOX2= "/btb", "/bobstoolbox";
 function SlashCmdList.BOBSTOOLBOX(command)
-	if (command == "reset") then
+	local prefix = BobbyCode.ChatColor.DarkGreen .. BobsToolbox.Name .. " v" .. BobsToolbox.Version;
+	
+	if (command == "debug") then
+		BobbyCode:Print("Player");
+		BobbyCode:Print("  Name: ", BobsToolbox.PlayerName);
+		BobbyCode:Print("  Class: ", BobsToolbox.PlayerClass);
+		BobbyCode:Print("  Spec: ", BobsToolbox.PlayerSpec);
+		BobbyCode:Print("  Race: ", BobsToolbox.PlayerRace);
+		BobbyCode:Print("  GUID: ", BobsToolbox.PlayerGuid);
+	elseif (command == "reset") then
 		BobsConfiguration:Reset();
 		BobsToolbox:ApplySettings();
+		BobbyCode:Print(prefix, BobbyCode.ChatColor.LightGray, ": Reset settings for BobsToolbox.");
 	else
-		BobsToolbox:PrintCommands();
+		BobbyCode:Print(prefix);
+		BobbyCode:Print(BobbyCode.ChatColor.LightGray, "   reset : Reset the configuration to defaults.");
 	end
 end

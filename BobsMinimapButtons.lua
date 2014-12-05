@@ -4,7 +4,6 @@
 BobsMinimapButtons = BobbyCode:CreateFrame("BobsMinimapButtons", UIParent);
 BobsMinimapButtons.Buttons = {};
 BobsMinimapButtons.ButtonNames = {};
-BobsMinimapButtons.Enabled = false;
 
 local BlockedButtons = { "GameTimeFrame", "MiniMapWorldMapButton", "TimeManagerClockButton" }
 local HideButtons = { "MinimapZoomIn", "MinimapZoomOut" };
@@ -15,16 +14,13 @@ function BobsMinimapButtons:Initialize()
 
 	BobsMinimapButtons:ClearAllPoints();
 	BobsMinimapButtons:SetPoint("TOPLEFT", UIParent);
+	
+	BobsToolbox:RegisterTask("BobsMinimapButtons", BobsMinimapButtons.Timer, 2);
+	BobsMinimapButtons:ShowBackground(false);
+	BobsMinimapButtons:Show();
 end
 
 function BobsMinimapButtons:ApplySettings()
-	if (not BobsMinimapButtons.Enabled) then
-		BobsToolbox:RegisterTask("BobsMinimapButtons", BobsMinimapButtons.Timer, 2);
-		BobsMinimapButtons:Show();
-		BobsMinimapButtons.Enabled = true;
-	end
-	   
-	BobsMinimapButtons:ShowBackground(false);
 end
 
 function BobsMinimapButtons:OrganizeButtons()
@@ -53,7 +49,8 @@ end
 
 function BobsMinimapButtons:GrabButtons(frame)
 	local buttons = {frame:GetChildren()};
-	local buttonName;
+	local buttonName = "";
+	local needsUpdate = false;
 
 	for _, button in pairs(buttons) do
 		buttonName = button:GetName();
@@ -72,15 +69,19 @@ function BobsMinimapButtons:GrabButtons(frame)
 			elseif button:HasScript("OnClick") and button:IsShown() then
 				BobsMinimapButtons.Buttons[buttonName] = button;
 				table.insert(BobsMinimapButtons.ButtonNames, buttonName);
+				needsUpdate = true;
 			else
 				-- Process special buttons.
 				if (buttonName == "MiniMapTracking") or (buttonName == "FishingBuddyMinimapFrame") then
 					BobsMinimapButtons.Buttons[buttonName] = button;
 					table.insert(BobsMinimapButtons.ButtonNames, buttonName);
+					needsUpdate = true;
 				end
 			end
 		end
 	end
+	
+	return needsUpdate;
 end
 
 -- 
@@ -88,7 +89,10 @@ end
 -- will represent BobsToolbox. Be sure to use explicit object names.
 --
 function BobsMinimapButtons:Timer()
-    BobsMinimapButtons:GrabButtons(Minimap);
-	BobsMinimapButtons:GrabButtons(MinimapBackdrop);
-	BobsMinimapButtons:OrganizeButtons();
+    local buttonSet1 = BobsMinimapButtons:GrabButtons(Minimap);
+	local buttonSet2 = BobsMinimapButtons:GrabButtons(MinimapBackdrop);
+	
+	if (buttonSet1 or buttonSet2) then
+		BobsMinimapButtons:OrganizeButtons();
+	end
 end

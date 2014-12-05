@@ -7,7 +7,7 @@ local UnitEventHandlers = {};
 local OldPlayerFrameOnEnter = PlayerFrame:GetScript("OnEnter");
 local OldPlayerFrameOnLeave = PlayerFrame:GetScript("OnLeave");
 
-function BobsPlayerFrame:Initialize()
+ function BobsPlayerFrame:Initialize()
 	PlayerFrame.RaidTargetIcon = PlayerFrameTexture:GetParent():CreateTexture();
 	PlayerFrame.RaidTargetIcon:SetDrawLayer("OVERLAY");
 	PlayerFrame.RaidTargetIcon:SetVertexColor(1, 1, 1, 1);
@@ -16,18 +16,38 @@ function BobsPlayerFrame:Initialize()
 	PlayerFrame.RaidTargetIcon:SetHeight(26);
 	PlayerFrame.RaidTargetIcon:SetWidth(26);
 	PlayerFrame.RaidTargetIcon:Hide();
+	PlayerFrame.FadeOut = false;
+	PlayerFrame.FadedOut = true;
+	PlayerFrame:SetAlpha(0);
 
 	for eventname, _ in pairs(UnitEventHandlers) do 
 		BobsPlayerFrame:RegisterEvent(eventname);
 	end
+	
+	PlayerFrame:SetScript("OnEnter", function(self) 
+		PlayerFrame.FadeOut = false;
+		PlayerFrame.FadedOut = false;
+		PlayerFrame:SetAlpha(1.0);
+		OldPlayerFrameOnEnter(PlayerFrame);
+	end);
+	
+	BobsToolbox:RegisterTask("BobsPlayerFrame", BobsPlayerFrame.Timer, 1/20);
 end
 
 function BobsPlayerFrame:ApplySettings()
-	BobsPlayerFrame:SetupMouseOver(true);
 	BobsPlayerFrame:UpdateRaidIcon();
-
 	BobsPlayerFrame:MoveStuff();
-	BobsPlayerFrame:HideStuff();
+end
+
+function BobsPlayerFrame:StartFade()
+	PlayerFrame.FadeOut = true;
+	PlayerFrame.FadedOut = false;
+end
+
+function BobsPlayerFrame:Unhide()
+	PlayerFrame.FadeOut = false;
+	PlayerFrame.FadedOut = false;
+	PlayerFrame:SetAlpha(1.0) 
 end
 
 function BobsPlayerFrame:MoveStuff()
@@ -37,16 +57,6 @@ function BobsPlayerFrame:MoveStuff()
 
 	PlayerFrame:ClearAllPoints();
 	PlayerFrame:SetPoint("TOPLEFT", BobsMinimapButtons, "BOTTOMLEFT", -18, 4);
-end
-
-function BobsPlayerFrame:HideStuff()
-	local targetting = UnitExists("target");
-	local percent = BobbyCode:GetUnitHealthPercentage("player");
-	if (percent >= 100 and not BobsToolboxSettings.LayoutMode and not InCombatLockdown() and not targetting) then 
-		PlayerFrame:SetAlpha(0);
-	else
-		PlayerFrame:SetAlpha(100);
-	end
 end
 
 function BobsPlayerFrame:UpdateRaidIcon()
@@ -62,30 +72,36 @@ function BobsPlayerFrame:UpdateRaidIcon()
 	end
 end
 
-function BobsPlayerFrame:SetupMouseOver(hide)
-	if (hide) then
-		PlayerFrame:SetScript("OnEnter", function(self) 
-			PlayerFrame:SetAlpha(1.0) 
-			OldPlayerFrameOnEnter(PlayerFrame);
-		end);
-
-		PlayerFrame:SetScript("OnLeave", function(self)
-			BobsPlayerFrame:HideStuff();
-			OldPlayerFrameOnLeave(PlayerFrame);
-		end);
-	else
-		PlayerFrame:SetScript("OnEnter", OldPlayerFrameOnEnter);
-		PlayerFrame:SetScript("OnLeave", OldPlayerFrameOnLeave);
-	end
-end
-
-function BobsPlayerFrame:OnEvent(event, ...)
+ function BobsPlayerFrame:OnEvent(event, ...)
 	UnitEventHandlers[event](self, ...);
 end
 
 UnitEventHandlers.RAID_TARGET_UPDATE = BobsPlayerFrame.UpdateRaidIcon;
-UnitEventHandlers.PLAYER_REGEN_DISABLED = BobsPlayerFrame.ApplySettings;
-UnitEventHandlers.PLAYER_REGEN_ENABLED = BobsPlayerFrame.ApplySettings;
-UnitEventHandlers.PLAYER_TARGET_CHANGED = BobsPlayerFrame.ApplySettings;
+UnitEventHandlers.PLAYER_REGEN_DISABLED = BobsPlayerFrame.Unhide;
+UnitEventHandlers.PLAYER_REGEN_ENABLED = BobsPlayerFrame.StartFade;
+UnitEventHandlers.PLAYER_TARGET_CHANGED = function ()
+	if (UnitExists("target")) then 
+		BobsPlayerFrame:Unhide();
+	else
+		BobsPlayerFrame:StartFade();
+	end
+end;
 
 BobsPlayerFrame:SetScript("OnEvent", BobsPlayerFrame.OnEvent);
+
+function BobsPlayerFrame:Timer()	
+	if (InCombatLockdown() or PlayerFrame.FadedOut) then
+		return;
+	end
+
+	BobbyCode:FadeRegion(PlayerFrame);
+	
+	if (UnitExists("target")) then
+		return;
+	end
+	
+	local f = GetMouseFocus();
+	if (f == WorldFrame) then
+		BobsPlayerFrame:StartFade();
+	end
+end

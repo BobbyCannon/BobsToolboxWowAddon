@@ -15,11 +15,15 @@ function BobsRotationPriestTemplate:GetNextSpell(skipSpell)
 		globalCooldown = 0;
 	end
 	
+	if (not BobsRotationFrame:CheckBuff("Insanity", nil, 0)) then
+		return "Mind Flay";
+    end
+	
 	if (BobsRotationFrame:SpellIsReady("Devouring Plague", nil, globalCooldown)) then
 		local orbs = UnitPower("player", SPELL_POWER_SHADOW_ORBS);
-		if (orbs >= 3) {
+		if (orbs >= 3) then
 			return "Devouring Plague";
-		}
+		end
 	end
 	
 	if (BobsRotationFrame:SpellIsReady("Mind Blast", skipSpell, globalCooldown)) then
@@ -40,11 +44,7 @@ function BobsRotationPriestTemplate:GetNextSpell(skipSpell)
     if (BobsRotationFrame:CheckDebuff("Vampiric Touch", skipSpell, 4)) then
    		return "Vampiric Touch";
     end
-	
-	if (BobsRotationFrame:SpellIsReady("Insanity", skipSpell, globalCooldown)) then
-		return "Insanity";
-	end
-	
+		
 	return "Mind Flay";
 end
 
