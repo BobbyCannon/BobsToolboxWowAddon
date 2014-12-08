@@ -68,6 +68,9 @@ end
 function UnitEventHandlers:UNIT_SPELLCAST_CHANNEL_START(unit, spellName)
 	if (unit == "player") then
 		BobsRotationFrame.CurrentlyCasting = spellName;
+		if (BobsRotationFrame.Template.CheckCast) then
+			BobsRotationFrame.Template:CheckCast(spellName);
+		end
 	end
 end
 
@@ -189,15 +192,29 @@ end
 function BobsRotationFrame:CheckForBuff(name)
 	local dbName, _, _, count = UnitAura("player", name, nil, "PLAYER|HELPFUL");
 
-	if (dbName == name ) then
-		return true;
+	if (dbName ~= name ) then
+		return 0;
+	elseif (dbName == name) and (count == 0) then
+		return 1;
+	else
+		return count;
 	end
-	
-	return false;
 end
 
 function BobsRotationFrame:CheckForPlayerDebuff(name)
 	local dbName, _, _, count = UnitAura("player", name, nil, "PLAYER|HARMFUL");
+
+	if (dbName ~= name) then
+		return 0;
+	elseif (dbName == name) and (count == 0) then
+		return 1;
+	else
+		return count;
+	end
+end
+
+function BobsRotationFrame:CheckForTargetDebuff(name)
+	local dbName, _, _, count = UnitAura("target", name, nil, "PLAYER|HARMFUL");
 
 	if (dbName ~= name) then
 		return 0;

@@ -3,19 +3,61 @@
 
 BobsRotationPriestTemplate = {};
 
+function BobsRotationPriestTemplate:CheckCast(spellName)
+	local hasDevouringPlague = BobsRotationFrame:CheckForTargetDebuff("Devouring Plague") > 0;
+
+	if (hasDevouringPlague and (spellName == "Mind Spike")) then
+		PlaySoundFile("Sound\\Creature\\Peon\\PeonPissed1.wav");
+	end
+end
+
 function BobsRotationPriestTemplate:GetNextSpell(skipSpell)
 	if (BobsToolbox.PlayerSpec ~= "Shadow") then
 		return;
 	end
 	
-	local casting = BobsRotationFrame.CurrentlyCasting;
 	local globalCooldown = BobsRotationFrame:GetGlobalCooldown();
-	
 	if (skipSpell == nil) then
-		globalCooldown = 0;
+		globalCooldown = globalCooldown / 2;
+	end
+
+	local hasClarityOfPower = select(4, GetTalentInfo(7,1,1));
+	if (hasClarityOfPower) then
+		return BobsRotationPriestTemplate:ProcessAsClarityOfPower(skipSpell, globalCooldown);
 	end
 	
-	if (skipSpell ~= "Mind Flay" and BobsRotationFrame:CheckForBuff("Shadow Word: Insanity")) then
+	return BobsRotationPriestTemplate:ProcessAsDotWeaving(skipSpell, globalCooldown);
+end
+
+function BobsRotationPriestTemplate:ProcessAsClarityOfPower(skipSpell, globalCooldown)
+	if (BobsRotationFrame:SpellIsReady("Mind Blast", skipSpell, globalCooldown)) then
+		return "Mind Blast";
+	end
+	
+	if (BobsRotationFrame:SpellIsReady("Shadow Word: Death", skipSpell, globalCooldown)) then
+        local healthLeft = UnitHealth("target") / UnitHealthMax("target");
+        if (healthLeft <= 0.25) then
+            return "Shadow Word: Death";
+        end
+	end
+	
+	if (BobsRotationFrame:CheckForBuff("Surge of Darkness") >= 3) then
+		return "Mind Spike";
+	end
+	
+	if ((skipSpell ~= "Mind Flay") and (BobsRotationFrame:CheckForBuff("Shadow Word: Insanity") > 0)) then
+		return "Mind Flay";
+    end
+	
+	if (BobsRotationFrame:CheckForTargetDebuff("Devouring Plague") > 0) then
+		return "Mind Flay";
+    end
+	
+	return "Mind Spike";
+end
+
+function BobsRotationPriestTemplate:ProcessAsDotWeaving(skipSpell, globalCooldown)
+	if ((skipSpell ~= "Mind Flay") and (BobsRotationFrame:CheckForBuff("Shadow Word: Insanity") > 0)) then
 		return "Mind Flay";
     end
 	
@@ -83,27 +125,21 @@ function BobsRotationRogueTemplate:GetNextSpell(skipSpell)
 		return;
 	end
 	
-	local casting = BobsRotationFrame.CurrentlyCasting;
-	local globalCooldown = BobsRotationFrame:GetGlobalCooldown();
-	local targetHealth = BobbyCode:GetUnitHealthPercentage("target");
 	local comboPoints = GetComboPoints("player", "target");
-
-	if (not BobsRotationFrame:CheckForBuff("Slice and Dice") and (skipSpell ~= "Slice and Dice")) then
-		return "Slice and Dice";
-	end
-
-	if (BobsRotationFrame:CheckForBuff("Slice and Dice") and BobsRotationFrame:CheckBuff("Slice and Dice", skipSpell, 6)) then
-		return "Envenom";
-	end
-
-	if (BobsRotationFrame:CheckDebuff("Rupture", skipSpell, 6) and (comboPoints == 5)) then
+	
+	if (BobsRotationFrame:CheckDebuff("Rupture", skipSpell, 8) and (comboPoints == 5)) then
 		return "Rupture";
 	end
-
-	if (BobsRotationFrame:CheckForBuff("Blindside") and (skipSpell ~= "Blindside")) then
+	
+	if (BobsRotationFrame:SpellIsReady("Envenom", skipSpell, globalCooldown) and (comboPoints >= 5)) then
+		return "Envenom";
+	end
+	
+	if (BobsRotationFrame:CheckForBuff("Blindside") > 0 and (skipSpell ~= "Blindside")) then
 		return "Dispatch";
 	end
 
+	local targetHealth = BobbyCode:GetUnitHealthPercentage("target");
 	if (targetHealth >= 35) then
 		return "Mutilate";
 	else
