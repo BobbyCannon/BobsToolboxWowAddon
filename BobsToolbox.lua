@@ -29,9 +29,8 @@ BobsToolbox.Tools = {
 	BobsExtraPowerFrame, 
 	BobsHudFrame, 
 	BobsMinimapButtons, 
-	BobsPlayerFrame, 
-	BobsRotationFrame, 
-	BobsTargetFrame
+	BobsUnitFrames, 
+	BobsRotationFrame
 };
 
 ClickCastFrames = ClickCastFrames or {}

@@ -150,7 +150,8 @@ end
 
 function BobsRotationFrame:ClassSupported()
 	return (((BobsToolbox.PlayerClass == "Priest") and (BobsToolbox.PlayerSpec == "Shadow")) or
-			((BobsToolbox.PlayerClass == "Rogue") and (BobsToolbox.PlayerSpec == "Assassination")));
+			((BobsToolbox.PlayerClass == "Rogue") and (BobsToolbox.PlayerSpec == "Assassination")) or
+			((BobsToolbox.PlayerClass == "Rogue") and (BobsToolbox.PlayerSpec == "Subtlety")));
 end
 
 function BobsRotationFrame:SpellIsReady(spellToCheck, skipSpell, globalCooldown)

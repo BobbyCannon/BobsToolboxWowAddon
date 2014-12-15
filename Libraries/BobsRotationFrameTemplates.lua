@@ -121,12 +121,18 @@ end
 BobsRotationRogueTemplate = {};
 
 function BobsRotationRogueTemplate:GetNextSpell(skipSpell)
-	if (BobsToolbox.PlayerSpec ~= "Assassination") then
-		return;
+	if (BobsToolbox.PlayerSpec == "Assassination") then
+		return BobsRotationRogueTemplate:GetNextSpellForAssassination()
 	end
 	
+	if (BobsToolbox.PlayerSpec == "Subtlety") then
+		return BobsRotationRogueTemplate:GetNextSpellForSubtlety()
+	end
+end
+
+function BobsRotationRogueTemplate:GetNextSpellForAssassination()
 	local comboPoints = GetComboPoints("player", "target");
-	
+
 	if (BobsRotationFrame:CheckDebuff("Rupture", skipSpell, 8) and (comboPoints == 5)) then
 		return "Rupture";
 	end
@@ -145,6 +151,10 @@ function BobsRotationRogueTemplate:GetNextSpell(skipSpell)
 	else
 		return "Dispatch";
 	end
+end
+
+function BobsRotationRogueTemplate:GetNextSpellForSubtlety()
+	return "Backstab";
 end
 
 function BobsRotationRogueTemplate:GetExtraSpell()

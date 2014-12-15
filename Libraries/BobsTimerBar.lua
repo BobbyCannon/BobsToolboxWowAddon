@@ -6,28 +6,21 @@ function BobsTimerBar_Create(name, parent)
 	local color = { r = 1, g = 1, b = 1, a = 1 };
 
 	timer:SetWidth(parent:GetWidth());
-	timer:SetHeight(15);
+	timer:SetHeight(18);
 
 	timer.Text = timer:CreateFontString(nil, "ARTWORK", "BobsToolboxFont");
 	BobbyCode:SetLabelFont(timer.Text, color, 10, true);
-	timer.Text:SetPoint("LEFT", timer, "LEFT", 2, 0);
+	timer.Text:SetPoint("LEFT", timer, "LEFT", 2, -1);
 
 	timer.Time = timer:CreateFontString(nil, "ARTWORK", "BobsToolboxFont");
 	BobbyCode:SetLabelFont(timer.Time, color, 8, true);
-	timer.Time:SetPoint("RIGHT", timer, "RIGHT");
+	timer.Time:SetPoint("RIGHT", timer, "RIGHT", 0, -1);
 
 	timer.Icon = timer:CreateTexture(nil, "ARTWORK");
 	timer.Icon:SetPoint("RIGHT", timer, "LEFT", -1, 0);
-	timer.Icon:SetHeight(16);
-	timer.Icon:SetWidth(16);
-
-	timer.Spark = timer:CreateTexture(nil, "ARTWORK");
-	timer.Spark:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark");
-	timer.Spark:SetBlendMode("ADD");
-	timer.Spark:SetPoint("CENTER");
-	timer.Spark:SetHeight(32);
-	timer.Spark:SetWidth(32);
-
+	timer.Icon:SetHeight(18);
+	timer.Icon:SetWidth(18);
+	
 	timer.Cooldown = 0;
 	timer.Started = nil;
 	timer.Remove = nil;
@@ -120,10 +113,8 @@ function BobsTimerBar_OnUpdate(timer)
 	timer:SetStatusBarColor(color.r, color.g, color.b, 0.8);
 	timer:SetMinMaxValues(0, timer.Cooldown);
 	timer:SetValue(timeLeft);
-		
 	timer.Time:SetText(BobsTimerBar_TimeToString(timeLeft));
-	timer.Spark:SetPoint("CENTER", timer, "LEFT", timer:GetWidth() * percent, -2);
-
+	
 	if (timeLeft <= 0) then
 		timer.Remove = true;
 	end

@@ -67,11 +67,20 @@ function BobbyCode:CreateFrame(name, parent, template)
 	frame:SetFrameStrata("MEDIUM");
 	frame:SetClampedToScreen(true);
     frame:SetSize(200, 200);
+	frame.FadeLevel = 0;
 	
 	BobbyCode:AddFrameFunctions(frame);
 	frame:ShowBackground(false);
                 
     return frame;
+end
+
+function BobbyCode:CreateButton(name, parent, template)
+    local button = CreateFrame("Button", name, parent, template);
+	button:SetFrameStrata("MEDIUM");
+	button:SetClampedToScreen(true);
+	button.FadeLevel = 0;
+	return button;
 end
 
 function BobbyCode:Unfade(region)
@@ -138,34 +147,13 @@ function BobbyCode:AddFrameFunctions(frame)
 			self:SetAlpha(newA);
 		end
 	end
-
-	frame.EnableDragging = function(self)
-		frame:EnableMouse(true);
-		frame:RegisterForDrag("LeftButton");
-		frame:SetMovable(true);
-	end
-
-	frame.DisableDragging = function(self)
-		frame:EnableMouse(false);
-		frame:RegisterForDrag(nil);
-		frame:SetMovable(false);
-	end
-
-	frame:SetScript("OnDragStart",  function(self)
-		self:StartMoving();
-	end);
-
-	frame:SetScript("OnDragStop", function(self)
-		frame:StopMovingOrSizing();
-	end);
 end
 
 function BobbyCode:ShowBackground(frame, show)
 	if (show) then
-		frame:SetBackdrop({bgFile = BobbyCode.Texture.DialogBackground, edgeFile = BobbyCode.Texture.DialogBorder, 
-			tile = true, tileSize = 16, edgeSize = 8, insets = { left = 0, right = 0, top = 0, bottom = 0 } });
-		frame:SetBackdropColor(0, 0, 0, 0.5);
-		local color = frame.BackgroundColor or { r = 0, g = 0, b = 0, a = 0.5 };
+		frame:SetBackdrop({bgFile = BobbyCode.Texture.DialogBackground, edgeFile = BobbyCode.Texture.DialogBorder, tile = true, tileSize = 16, edgeSize = 8, insets = { left = 0, right = 0, top = 0, bottom = 0 } });
+		frame:SetBackdropColor(0, 0, 0, 0.65);
+		local color = frame.BackgroundColor or { r = 0, g = 0, b = 0, a = 1 };
 		frame:SetBackdropBorderColor(color.r, color.g, color.b, color.a);
 	else
 		frame:SetBackdrop({bgFile = "", edgeFile = ""});
@@ -201,15 +189,16 @@ function BobbyCode:SetLabelFont(label, color, size, thick)
 end
 
 function BobbyCode:CreateStatusBar(name, parent)
-	local frame = CreateFrame("StatusBar", name, parent);
+	local frame = CreateFrame("StatusBar", parent:GetName() .. name, parent);
 	frame:SetStatusBarTexture(TexturePath .. "HorizontalBar");
 	frame:GetStatusBarTexture():SetHorizTile(false);
 	frame:SetStatusBarColor(0, 0, 1, 1);
 	frame:SetBackdrop({bgFile = TexturePath .. "HorizonalBar"});
-	frame:SetBackdropColor(0, 0, 0, 0.5);
+	frame:SetBackdropColor(0, 0, 0, 0.65);
 	frame:SetOrientation("HORIZONTAL")
 	frame:SetFrameStrata("MEDIUM");
 	frame:SetMinMaxValues(0, 100);
+	frame:SetValue(100);
 	frame:SetWidth(100);
 	frame:SetHeight(10);
 	frame:SetPoint("CENTER");
@@ -257,7 +246,7 @@ function BobbyCode:GetStrings(...)
 end
 
 --
--- Lua version of a ternary statment.
+-- LUA version of a ternary statement.
 --
 function BobbyCode:Select(value, option1, option2)
 	if (value) then
@@ -313,7 +302,7 @@ function BobbyCode:GetUnitName(unit, appendState)
 end
 
 --
--- Get's the class of the unit.
+-- Gets the class of the unit.
 --
 function BobbyCode:GetUnitClass(unit)
 	local class, key = UnitClassBase(unit);
@@ -426,7 +415,12 @@ function BobbyCode:GetUnitPowerPercentage(unit)
 	return math.ceil((current / max) * 100);
 end
 
-function BobbyCode:GetHealthColor(percent)
+function BobbyCode:GetHealthColor(unit)
+	local percent = BobbyCode:GetUnitHealthPercentage(unit);
+	return BobbyCode:GetHealthColorByPercent(percent);
+end
+
+function BobbyCode:GetHealthColorByPercent(percent)
 	if (percent > 1) then
 		percent = percent / 100;
 	end
@@ -444,8 +438,12 @@ function BobbyCode:GetColorAsTable(r, g, b, a)
 	return { r = r, g = g, b = b, a = a or 0 };
 end
 
+function BobbyCode:GetColorAsParameters(color)
+	return color.r, color.g, color.b, color.a or 1;
+end
+
 --
--- Get the quanity of group members targetting the unit.
+-- Get the quantity of group members targeting the unit.
 --
 function BobbyCode:GetUnitTargettedByCount(unit)
 	local _, groupType = IsInInstance();
@@ -653,21 +651,13 @@ function BobbyCode:PrintTable(object)
 	end
 end
  
-function BobbyCode:FormatNumbers(current, max, asPercent)
-	if (max > 0) then
-		if (asPercent) then
-			return string.format("%.0f", current / max * 100) .. "%";
-		else
-			if (current > 1000000) then
-				return string.format("%.1fm", current / 1000000);
-			elseif (current > 1000) then
-				return string.format("%.1fk", current / 1000);
-			else
-				return string.format("%.0f", current);
-			end
-		end
+function BobbyCode:FormatNumber(current)
+	if (current > 1000000) then
+		return string.format("%.1fm", current / 1000000);
+	elseif (current > 1000) then
+		return string.format("%.1fk", current / 1000);
 	else
-		return "0";
+		return string.format("%.0f", current);
 	end
 end
 
@@ -722,6 +712,14 @@ function BobbyCode:GetPlayerRangeSpells()
 	elseif (class == "Shaman") then
 		return "Healing Surge", "Lightning Bolt";
 	end
+end
+
+function BobbyCode:HideBlizzardPlayerFrame()
+	PlayerFrame:UnregisterAllEvents()
+	PlayerFrameHealthBar:UnregisterAllEvents()
+	PlayerFrameManaBar:UnregisterAllEvents()
+	PlayerFrame:Hide()
+	PlayerFrame.Show = function() end;
 end
 
 function BobbyCode:HideBlizzardTargetFrame()

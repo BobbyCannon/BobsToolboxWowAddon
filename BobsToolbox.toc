@@ -16,7 +16,6 @@ BobsCooldownFrame.lua
 BobsExtraPowerFrame.lua
 BobsHudFrame.lua
 BobsMinimapButtons.lua
-BobsPlayerFrame.lua
 BobsRotationFrame.lua
-BobsTargetFrame.lua
+BobsUnitFrames.lua
 BobsToolbox.lua
