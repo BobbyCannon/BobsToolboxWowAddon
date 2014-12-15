@@ -25,7 +25,8 @@ BobsToolbox.OptionFrames = {};
 BobsToolbox.Tools = {
 	BobsActionBars, 
 	BobsChatWindow, 
-	BobsCooldownFrame, 
+	BobsCooldownFrame,
+	BobsCurrencyFrame,
 	BobsExtraPowerFrame, 
 	BobsHudFrame, 
 	BobsMinimapButtons, 

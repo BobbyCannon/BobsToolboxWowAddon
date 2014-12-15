@@ -13,6 +13,7 @@ BobsActionBars.lua
 BobsChatWindow.lua
 BobsConfiguration.lua
 BobsCooldownFrame.lua
+BobsCurrencyFrame.lua
 BobsExtraPowerFrame.lua
 BobsHudFrame.lua
 BobsMinimapButtons.lua

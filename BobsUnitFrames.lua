@@ -18,7 +18,7 @@ function BobsUnitFrames:Initialize()
 	
 	BobbyCode:HideBlizzardTargetFrame();
 	BobsUnitFrames.TargetFrame = BobsUnitFrames:Create("TargetFrame", "target");
-	BobsUnitFrames.TargetFrame:SetPoint("BOTTOM", BobsUnitFrames.PlayerFrame, "TOP", 0, 16);
+	BobsUnitFrames.TargetFrame:SetPoint("TOP", BobsRotationFrame, "BOTTOM", 0, -20);
 	RegisterUnitWatch(BobsUnitFrames.TargetFrame);
 	
 	BobsToolbox:RegisterTask("BobsUnitFrames", BobsUnitFrames.Timer, 1/20);
@@ -50,8 +50,6 @@ UnitEventHandlers.PLAYER_TARGET_CHANGED = function()
 end
 
 UnitEventHandlers.PLAYER_UPDATE_RESTING = function()
-	BobbyCode:Print("Resting? ", IsResting());
-	
 	if (IsResting()) then
 		BobsUnitFrames.PlayerFrame.RestIcon:Show();
 	else
@@ -101,11 +99,9 @@ UnitEventHandlers.UNIT_POWER = function(frame, arg1)
 	if (maximum == 0) then
 		frame.PowerBar:Hide();
 		frame.HealthBar:SetHeight(frameHeight);
-		frame.Name:SetHeight(frame.HealthBar:GetHeight());
 	else
 		frame.PowerBar:Show();
-		frame.HealthBar:SetHeight(22);
-		frame.Name:SetHeight(frame.HealthBar:GetHeight());
+		frame.HealthBar:SetHeight(23);
 	end
 end
 
@@ -143,33 +139,33 @@ function BobsUnitFrames:Create(name, unit)
 	frame.HealthBar:ClearAllPoints();
 	frame.HealthBar:SetPoint("TOP", frame);
 	frame.HealthBar:SetWidth(frame:GetWidth());
-	frame.HealthBar:SetHeight(22);
+	frame.HealthBar:SetHeight(23);
 	frame.HealthBar:SetStatusBarColor(BobbyCode:GetColorAsParameters(BobbyCode.Color.Green));
 	
-	frame.HealthLabel = BobbyCode:CreateLabel(frame, "Label", "", BobbyCode.Color.White, 10, false);
+	frame.HealthLabel = BobbyCode:CreateLabel(frame.HealthBar, "Label", "", BobbyCode.Color.White, 10, false);
 	frame.HealthLabel:ClearAllPoints();
 	frame.HealthLabel:SetPoint("BOTTOMLEFT", frame, "TOPLEFT", 0, 2);
 	frame.HealthLabel:Hide();
 		
 	frame.Name = BobbyCode:CreateLabel(frame.HealthBar, "Name", "", BobbyCode.Color.White, 14, true);
 	frame.Name:ClearAllPoints();
-	frame.Name:SetPoint("LEFT", frame.HealthBar, "LEFT", 4, -2);
+	frame.Name:SetPoint("LEFT", frame.HealthBar, "LEFT", 4, -1);
 	frame.Name:SetWidth(frame.HealthBar:GetWidth() * 0.75);
-	frame.Name:SetHeight(frame.HealthBar:GetHeight());
+	frame.Name:SetHeight(22);
 	
 	frame.Level = BobbyCode:CreateLabel(frame.HealthBar, "Level", "0", BobbyCode.Color.White, 12, true);
 	frame.Level:ClearAllPoints();
-	frame.Level:SetPoint("RIGHT", frame.HealthBar, "right", -2, -2);
+	frame.Level:SetPoint("RIGHT", frame.HealthBar, "right", -2, -1);
 	frame.Level:SetHeight(frame.HealthBar:GetHeight());
 		
 	frame.PowerBar = BobbyCode:CreateStatusBar("PowerBar", frame);
 	frame.PowerBar:ClearAllPoints();
 	frame.PowerBar:SetPoint("BOTTOM", frame, "BOTTOM");
 	frame.PowerBar:SetWidth(frame:GetWidth());
-	frame.PowerBar:SetHeight(5);
+	frame.PowerBar:SetHeight(4);
 	frame.PowerBar:SetStatusBarColor(BobbyCode:GetColorAsParameters(BobbyCode.Color.Blue));
 	
-	frame.PowerLabel = BobbyCode:CreateLabel(frame, "Label", "", BobbyCode.Color.White, 10, false);
+	frame.PowerLabel = BobbyCode:CreateLabel(frame.PowerBar, "Label", "", BobbyCode.Color.White, 10, false);
 	frame.PowerLabel:ClearAllPoints();
 	frame.PowerLabel:SetPoint("BOTTOMRIGHT", frame, "TOPRIGHT", 0, 2);
 	frame.PowerLabel:Hide();
