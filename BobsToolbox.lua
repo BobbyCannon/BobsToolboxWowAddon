@@ -7,6 +7,7 @@
 local addonName, addon = ...
 local version = GetAddOnMetadata(addonName, "Version");
 local minimapButtonIcon = {};
+local timerLastUpdated = GetTime();
 
 -- Create our addon.
 BobsToolbox = CreateFrame("frame", addonName, UIParent);
@@ -148,12 +149,17 @@ function BobsToolbox:ApplySettings()
 	end
 end
 
-function BobsToolbox:RegisterTask(name, func, time)
+function BobsToolbox:RegisterTask(name, func, time, parameter)
 	if (BobsToolbox.Tasks[name]) then
 		return;
 	end
 	
-	local task = { name = name, func = func, time = time, expired = GetTime() + time };
+	if (func == nil) then
+		BobbyCode:Print(BobbyCode.ChatColor.Red, "Tried to register task (" .. name .. ") with nil function!");
+		return;
+	end
+	
+	local task = { name = name, func = func, time = time, expired = GetTime() + time, parameter = parameter};
 	BobsToolbox.Tasks[name] = task;
 end
 
@@ -169,11 +175,13 @@ function BobsToolbox:IterateTask()
 	end
 end
 
-function BobsToolbox:OnUpdate(self, elapsed)
+function BobsToolbox:OnUpdate(elapsed)
+	timerLastUpdated = timerLastUpdated + elapsed;
+	
 	for index, task in pairs(BobsToolbox.Tasks) do
-		if (task.expired <= GetTime()) then
-			task.func();
-			task.expired = GetTime() + task.time;
+		if (task.expired <= timerLastUpdated) then
+			task.func(task.parameter);
+			task.expired = timerLastUpdated + task.time;
 		end
 	end
 end

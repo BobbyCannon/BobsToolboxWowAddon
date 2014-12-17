@@ -24,14 +24,15 @@ BobbyCode =
 		Cyan		= { r = 0.0, g = 1.0, b = 1.0, a = 1 },
 	},
 	Texture = {
-		RoundBar			= TexturePath .. "RoundBar",
-		ButtonBorder		= TexturePath .. "ButtonBorder",
-		ButtonNormal		= TexturePath .. "ButtonNormal",
-		ButtonOverlay		= TexturePath .. "ButtonOverlay",
+		RoundBarLeft		= TexturePath .. "RoundBarLeft",
+		RoundBarRight		= TexturePath .. "RoundBarRight",
 		DialogBorder		= TexturePath .. "DialogBorder",
 		DialogBackground	= TexturePath .. "DialogBackground",
-		UnitBorder			= TexturePath .. "UnitBorder",
-		HorizontalBar		= TexturePath .. "HorizontalBar",
+		RectangleOverlay	= TexturePath .. "RectangleOverlay",
+		RectangleSelect		= TexturePath .. "RectangleSelect",
+		SquareOverlay		= TexturePath .. "SquareOverlay",
+		SquareSelect		= TexturePath .. "SquareSelect",
+		SolidBar			= TexturePath .. "SolidBar",
 		StatusBar			= "Interface\\TargetingFrame\\UI-StatusBar",
 		Ready				= "Interface\\RaidFrame\\ReadyCheck-Ready",
 		NotReady			= "Interface\\RaidFrame\\ReadyCheck-NotReady",
@@ -190,10 +191,10 @@ end
 
 function BobbyCode:CreateStatusBar(name, parent)
 	local frame = CreateFrame("StatusBar", parent:GetName() .. name, parent);
-	frame:SetStatusBarTexture(TexturePath .. "HorizontalBar");
+	frame:SetStatusBarTexture(BobbyCode.Texture.SolidBar);
 	frame:GetStatusBarTexture():SetHorizTile(false);
 	frame:SetStatusBarColor(0, 0, 1, 1);
-	frame:SetBackdrop({bgFile = TexturePath .. "HorizonalBar"});
+	frame:SetBackdrop({bgFile = BobbyCode.Texture.SolidBar});
 	frame:SetBackdropColor(0, 0, 0, 0.65);
 	frame:SetOrientation("HORIZONTAL")
 	frame:SetFrameStrata("MEDIUM");
@@ -457,7 +458,7 @@ function BobbyCode:GetUnitTargettedByCount(unit)
 	local maxMembers = 0;
 	local count = 0;
 	
-	-- Determine the prefic and count base on the group type.
+	-- Determine the prefix and count base on the group type.
 	if (groupType == "party") or (groupType == "arena") then
 		count = 1;
 		prefix = "party";
@@ -661,6 +662,18 @@ function BobbyCode:FormatNumber(current)
 	end
 end
 
+function BobbyCode:FormatNumbers(current, maximum, asPercent)
+	if (maximum > 0) then
+		if (asPercent) then
+			return string.format("%.0f", current / maximum * 100);
+		else
+			return BobbyCode:FormatNumber(current);
+		end
+	else
+		return "0";
+	end
+end
+
 function BobbyCode:GetPlayerSpec()
 	if (not GetSpecialization) then
 		return BobbyCode:OldGetPlayerSpec();
@@ -680,7 +693,7 @@ function BobbyCode:UnitIsInRange(unit)
 	end
 
 	if (not UnitIsConnected(unit)) then
-		return nil;
+		return false;
 	end
 
 	local helpSpell, harmSpell = BobbyCode:GetPlayerRangeSpells();

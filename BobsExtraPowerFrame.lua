@@ -6,7 +6,7 @@ BobsExtraPowerFrame = BobbyCode:CreateFrame("BobsExtraPowerFrame", UIParent);
 local UnitEventHandlers = {};
 
 function BobsExtraPowerFrame:Initialize()
-	BobsExtraPowerFrame:SetPoint("TOP", BobsHudFrame, "BOTTOM", 0, 8);
+	BobsExtraPowerFrame:SetPoint("BOTTOM", BobsHudFrame, "BOTTOM", 0, -18);
 	BobsExtraPowerFrame.Indicator = {};
 
 	-- Create the graphics layer.

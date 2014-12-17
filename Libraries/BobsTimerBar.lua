@@ -28,6 +28,8 @@ function BobsTimerBar_Create(name, parent)
 	--timer:EnableMouse(false);
 	--timer:SetScript("OnClick", BobsTimerBar_OnClick);
 	timer:SetScript("OnUpdate", BobsTimerBar_OnUpdate);
+	
+	--BobsToolbox:RegisterTask(timer:GetName(), BobsTimerBar_OnUpdate, 1/60, timer);
 
 	return timer;
 end
@@ -92,7 +94,7 @@ function BobsTimerBar_Start(timer, cooldown, started)
 end
 
 function BobsTimerBar_GetTimeLeft(timer)
-    local remaining = timer.Cooldown - (GetTime() - timer.Started);
+    local remaining = timer.Cooldown - (GetTime() - (timer.Started or 0));
 	if (remaining < 0) then
 		remaining = 0;
 	end
@@ -109,8 +111,8 @@ function BobsTimerBar_OnUpdate(timer)
 	local percent = timeLeft / timer.Cooldown;
 	
 	-- Get the color based on health and/or debuffs
-	local color = BobbyCode:GetColorAsTable(BobbyCode:GetHealthColor(percent));
-	timer:SetStatusBarColor(color.r, color.g, color.b, 0.8);
+	local color = BobbyCode:GetColorAsTable(BobbyCode:GetHealthColorByPercent(percent));
+	timer:SetStatusBarColor(color.r, color.g, color.b, 0.75);
 	timer:SetMinMaxValues(0, timer.Cooldown);
 	timer:SetValue(timeLeft);
 	timer.Time:SetText(BobsTimerBar_TimeToString(timeLeft));
