@@ -691,29 +691,26 @@ function BobbyCode:UnitIsInRange(unit)
 	if (unit == "player") then
 		return true;
 	end
-
+	
 	if (not UnitIsConnected(unit)) then
+		return false;
+	end
+	
+	if (UnitIsDead(unit)) then
 		return false;
 	end
 
 	local helpSpell, harmSpell = BobbyCode:GetPlayerRangeSpells();
 	
-	if (UnitCanAssist("player", unit)) then
-		if (helpSpell and not UnitIsDead(unit)) then
-			if (IsSpellInRange(helpSpell, unit) == 1) then
-				return true;
-			end
-		elseif (not UnitOnTaxi( "player") and (UnitIsUnit(unit, "player") or UnitIsUnit(unit, "pet") or UnitPlayerOrPetInParty(unit) or UnitPlayerOrPetInRaid(unit))) then
-			-- Fast checking for self and party members (38 yd range).
-			if (UnitInRange(unit)) then
-				return true;
-			end
-		end
-	elseif (harmSpell and not UnitIsDead(unit) and UnitCanAttack("player", unit)) then
+	if (UnitIsFriend("player", unit) and helpSpell) then
+		return IsSpellInRange(helpSpell, unit) == 1;
+	end
+	
+	if (UnitCanAttack("player", unit) and harmSpell) then
 		return IsSpellInRange(harmSpell, unit) == 1;
 	end
 
-	-- Fallback when spell not found or class uses none, Follow distance (28 yd range).
+	-- Fall back when spell not found or class uses none, Follow distance (28 yd range).
 	return CheckInteractDistance(unit, 4); 
 end
 

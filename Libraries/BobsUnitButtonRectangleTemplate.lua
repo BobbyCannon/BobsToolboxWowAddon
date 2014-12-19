@@ -14,6 +14,7 @@ BobsUnitButtonRectangleTemplate = {
 		self:SetWidth(108);
 		self:SetHeight(24);
 	]],
+	Name = "Rectangle",
 	Width = 108,
 	Height = 24,
 }
@@ -22,6 +23,10 @@ function BobsUnitButtonRectangleTemplate:Layout(button)
 	-- Set the default template values.
 	button.Width = BobsUnitButtonRectangleTemplate.Width;
 	button.Height = BobsUnitButtonRectangleTemplate.Height;
+	
+	-- Set the width and height of the button.
+	button:SetWidth(button.Width);
+	button:SetHeight(button.Height);
 
 	-- Set the settings defaults for this template.
 	button.Settings.PowerSize = 2;
@@ -84,9 +89,11 @@ function BobsUnitButtonRectangleTemplate:Layout(button)
 	Graphics.OverlayAnchor:SetAllPoints();
 	
 	-- Position the text labels.
-	BobbyCode:SetFont(Graphics.Name, { fontOutline = true, fontSize = 11 });
+	BobbyCode:SetLabelFont(Graphics.Name, BobbyCode.Color.White, 11, true);
 	Graphics.Name:ClearAllPoints();
-	Graphics.Name:SetPoint("TOPLEFT", 14, -26);
+	Graphics.Name:SetPoint("TOPLEFT", 16, -24);
+	Graphics.Name:SetHeight(16);
+	Graphics.Name:SetWidth(96);
 	Graphics.Name:Show();
 
 	-- Hide the remaining text labels.
@@ -107,13 +114,13 @@ function BobsUnitButtonRectangleTemplate:Layout(button)
 	end
 
 	-- Overlay
-	Graphics.Overlay:SetTexture(texturePath .. "RectangleButtonOverlay");
+	Graphics.Overlay:SetTexture(BobbyCode.Texture.RectangleOverlay);
 	Graphics.Overlay:ClearAllPoints();
 	Graphics.Overlay:SetAllPoints(Graphics);
 	Graphics.Overlay:Show();
 
 	-- Border 
-	Graphics.Border:SetTexture(texturePath .. "RectangleButtonSelect");
+	Graphics.Border:SetTexture(BobbyCode.Texture.RectangleSelect);
 	Graphics.Border:ClearAllPoints();
 	Graphics.Border:SetAllPoints();
 	if (not Graphics.Border:IsShown()) then
@@ -121,7 +128,7 @@ function BobsUnitButtonRectangleTemplate:Layout(button)
 	end
 
 	-- Aggro 
-	Graphics.Aggro:SetTexture(texturePath .. "RectangleButtonSelect");
+	Graphics.Aggro:SetTexture(BobbyCode.Texture.RectangleSelect);
 	Graphics.Aggro:ClearAllPoints();
 	Graphics.Aggro:SetAllPoints();
 	if (not Graphics.Aggro:IsShown()) then
@@ -148,7 +155,7 @@ end
 
 function BobsUnitButtonRectangleTemplate:UpdateClass(button)
 	-- Update the name to the class color.
-	local _, color = BobbyCode:GetUnitClass(button.UnitID);
+	local _, color = BobbyCode:GetUnitClass(button.Unit);
 	button.Graphics.Name:SetTextColor(color.r, color.g, color.b, 1);
 end
 

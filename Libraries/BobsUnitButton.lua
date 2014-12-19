@@ -30,19 +30,10 @@ local DefaultSettings = {
 --
 function BobsUnitButton_Create(name, parent, settings)
     local button = CreateFrame("Button", name, parent, "SecureUnitButtonTemplate");
-	
-	-- Set the button settings.
-	button.Settings = {};
-	BobbyCode:SetTableValues(button.Settings, DefaultSettings);
-	BobbyCode:SetTableValues(button.Settings, settings)
+	button:SetAttribute("unit", settings.Unit);
 	
 	-- Initialize the button.
-	BobsUnitButton_Initialize(button);
-	
-	-- Assign the template and update the template layout.
-	button.Template = BobsUnitButton_GetTemplateByName(settings.Template);
-	button.Template:Layout(button);
-	button:Update();
+	BobsUnitButton_Initialize(button, settings);
 			
 	return button;
 end
@@ -51,9 +42,13 @@ end
 -- Initialize the unit button and all the resources required. All resources will be created and 
 -- initialized here. This should only be called once.
 --
-function BobsUnitButton_Initialize(button)
-	button.Unit = button.Settings.Unit;
-	button:SetAttribute("unit", button.Unit);
+function BobsUnitButton_Initialize(button, settings)
+	-- Set the button settings.
+	button.Settings = {};
+	BobbyCode:SetTableValues(button.Settings, DefaultSettings);
+	BobbyCode:SetTableValues(button.Settings, settings)
+	
+	button.Unit = button:GetAttribute("unit");	
 	button:RegisterForClicks("AnyDown");
 	button:SetAttribute("toggleForVehicle", true);
 	button:SetAttribute("*type1", "target")
@@ -140,6 +135,11 @@ function BobsUnitButton_Initialize(button)
 	for eventname, _ in pairs(UnitEventHandlers) do 
 		button:RegisterEvent(eventname);
 	end	
+	
+	-- Assign the template and update the template layout.
+	button.Template = BobsUnitButton_GetTemplateByName(button.Settings.Template);
+	button.Template:Layout(button);
+	button:Update();
 end
 
 --
@@ -363,6 +363,10 @@ end
 -- Default template handlers are below.
 --
 function BobsUnitButton_Update(button)
+	if (not UnitExists(button.Unit)) then
+		return;
+	end
+	
 	BobsUnitButton_UpdateName(button);
 	BobsUnitButton_UpdateLevel(button);
 	BobsUnitButton_UpdateGuildName(button);
@@ -580,7 +584,7 @@ function BobsUnitButton_UpdateThreat(button)
 	end
 
 	-- Get the threat situation for the unit ID.
-	local status = UnitThreatSituation(button.Unit);
+	local status = UnitThreatSituation(button.Unit, "target");
 	if status and (status > 0) then 
 		button.Graphics.Aggro:SetVertexColor(GetThreatStatusColor(status));
 		button.Graphics.Aggro:Show();
@@ -627,7 +631,8 @@ function BobsUnitButton_UpdateRange(button)
 	end
 
 	-- Get any information we need quickly.
-	if (not UnitInRange(button.Unit) or (button.IsDeadOrGhost) or (button.IsDisconnected)) then
+	local inRange = BobbyCode:UnitIsInRange(button.Unit);
+	if ((not inRange) or (button.IsDeadOrGhost) or (button.IsDisconnected)) then
 		button.Graphics:SetScale(0.8);
 	else
 		button.Graphics:SetScale(1);
