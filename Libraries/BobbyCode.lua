@@ -247,6 +247,13 @@ function BobbyCode:GetStrings(...)
 end
 
 --
+-- Checks to see if a string contains characters with descenders.
+--
+function BobbyCode:CheckStringForDescender(data)
+	return data:find('[gjpqy]') ~= nil;
+end
+
+--
 -- LUA version of a ternary statement.
 --
 function BobbyCode:Select(value, option1, option2)

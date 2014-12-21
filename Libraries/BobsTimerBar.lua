@@ -6,20 +6,20 @@ function BobsTimerBar_Create(name, parent)
 	local color = { r = 1, g = 1, b = 1, a = 1 };
 
 	timer:SetWidth(parent:GetWidth());
-	timer:SetHeight(18);
+	timer:SetHeight(16);
 
 	timer.Text = timer:CreateFontString(nil, "ARTWORK", "BobsToolboxFont");
 	BobbyCode:SetLabelFont(timer.Text, color, 10, true);
-	timer.Text:SetPoint("LEFT", timer, "LEFT", 2, -1);
+	timer.Text:SetPoint("LEFT", timer, "LEFT", 2, 0);
 
 	timer.Time = timer:CreateFontString(nil, "ARTWORK", "BobsToolboxFont");
 	BobbyCode:SetLabelFont(timer.Time, color, 8, true);
-	timer.Time:SetPoint("RIGHT", timer, "RIGHT", 0, -1);
+	timer.Time:SetPoint("RIGHT", timer, "RIGHT", 0, 0);
 
 	timer.Icon = timer:CreateTexture(nil, "ARTWORK");
 	timer.Icon:SetPoint("RIGHT", timer, "LEFT", -1, 0);
-	timer.Icon:SetHeight(18);
-	timer.Icon:SetWidth(18);
+	timer.Icon:SetHeight(16);
+	timer.Icon:SetWidth(16);
 	
 	timer.Cooldown = 0;
 	timer.Started = nil;
@@ -35,6 +35,14 @@ function BobsTimerBar_Create(name, parent)
 end
 
 function BobsTimerBar_Initialize(timer, text, icon)
+	timer.Text:ClearAllPoints();
+	
+	if (BobbyCode:CheckStringForDescender(text)) then
+		timer.Text:SetPoint("LEFT", timer, "LEFT", 2, 0);
+	else
+		timer.Text:SetPoint("LEFT", timer, "LEFT", 2, -1);
+	end
+	
 	timer.Text:SetText(text);
 	timer.Icon:SetTexture(icon);
 

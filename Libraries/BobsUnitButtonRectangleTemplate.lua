@@ -153,6 +153,18 @@ function BobsUnitButtonRectangleTemplate:Layout(button)
 	end
 end
 
+function BobsUnitButtonRectangleTemplate:UpdateName(button)
+	local name = UnitName(button.Unit);
+	button.Graphics.Name:SetText(name);
+	button.Graphics.Name:ClearAllPoints();
+	
+	if (BobbyCode:CheckStringForDescender(name)) then
+		button.Graphics.Name:SetPoint("TOPLEFT", 16, -24);
+	else
+		button.Graphics.Name:SetPoint("TOPLEFT", 16, -25);
+	end
+end
+
 function BobsUnitButtonRectangleTemplate:UpdateClass(button)
 	-- Update the name to the class color.
 	local _, color = BobbyCode:GetUnitClass(button.Unit);

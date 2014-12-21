@@ -218,6 +218,7 @@ function UnitEventHandlers.UNIT_HEALTH(button, unit)
 
 	-- Update the unit's health.
 	BobsUnitButton_UpdateHealth(button);
+	BobsUnitButton_UpdateName(button);
 end
 
 UnitEventHandlers.UNIT_MAXHEALTH = UnitEventHandlers.UNIT_HEALTH;
@@ -288,37 +289,6 @@ function UnitEventHandlers.UNIT_THREAT_SITUATION_UPDATE(button, unit)
 
 	-- Update the unit's threat state.
 	BobsUnitButton_UpdateThreat(button);
-end
-
-function UnitEventHandlers.READY_CHECK(button, startedBy)
-	-- Check to see if you are a party / ready leader.
-	local isMainAssist = GetPartyAssignment("MAINASSIST", "player");
-	local isLeader = UnitIsPartyLeader("player");
-	local isAssist = UnitIsRaidOfficer("player");
-	
-	-- Check to see if the player should see the ready check.
-	if ((not isMainAssist) and (not isLeader) and (not isAssist)) then
-		-- Don't start since the player is not allowed to see the ready check.
-		return;
-	end
-
-	-- Get the state of the ready check for the unit.
-	BobsUnitButton_StartReadyCheck(button, UnitName(button.Unit) == startedBy);
-end
-
-function UnitEventHandlers.READY_CHECK_CONFIRM(button, unit, ready)
-	-- Make sure the unit is valid.
-	if (button.Unit ~= unit) then
-		return;
-	end
-
-	-- Get the state of the confirmation.
-	BobsUnitButton_ConfirmReadyCheck(button, ready);
-end
-
-function UnitEventHandlers.READY_CHECK_FINISHED(button)
-	-- Clear the ready check.
-	BobsUnitButton_EndReadyCheck(button);
 end
 
 function UnitEventHandlers.UNIT_AURA(button, unit)
@@ -576,6 +546,10 @@ function BobsUnitButton_UpdateIcon(button)
 end
 
 function BobsUnitButton_UpdateThreat(button)
+	if (not BobsUnitButton_ValidateButton(button)) then
+		return;
+	end	
+	
 	-- Check to see if the template overrides this function.
 	if (button.Template.UpdateThreat ~= nil) then
 		-- Run the template function instead.
@@ -640,13 +614,17 @@ function BobsUnitButton_UpdateRange(button)
 end
 
 function BobsUnitButton_UpdateTargeted(button)
+	if (not BobsUnitButton_ValidateButton(button)) then
+		return;
+	end	
+	
 	-- Check to see if the template overrides this function.
 	if (button.Template.UpdateTargeted ~= nil) then
 		-- Run the template function instead.
 		button.Template:UpdateTargeted(button);
 		return;
 	end
-
+	
 	-- Check to see if we are the unit targeted.
 	if (UnitIsUnit("target", button.Unit)) then
 		BobsUnitButton_UpdateHealth(button);
@@ -730,4 +708,8 @@ function BobsUnitButton_UpdateAuras(button)
 			button.Graphics.Indicators[index]:Hide();
 		end
 	end
+end
+
+function BobsUnitButton_ValidateButton(button)
+	return UnitExists(button.Unit);
 end

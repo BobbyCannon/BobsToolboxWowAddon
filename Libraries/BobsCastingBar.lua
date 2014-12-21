@@ -34,7 +34,7 @@ function BobsCastingBar_Initialize(bar)
 	-- Set all the default values.
 	bar.Enabled = false;
 	bar.Initialized = false;
-	bar.UnitID = bar:GetAttribute("unit");
+	bar.Unit = bar:GetAttribute("unit");
 	bar.Name = bar:GetName();
 	
 	-- Just storage for optimization. Less memory garbage the better.
@@ -130,13 +130,18 @@ end
 -- Updates the button state when shown.
 --
 function BobsCastingBar_OnShow(bar)
+	-- Make sure the bar is valid.
+	if (not ValidateBar(bar)) then
+		return;
+	end
+	
 	if (bar.Casting) then
-		local _, _, _, _, startTime = UnitCastingInfo(bar.UnitID);
+		local _, _, _, _, startTime = UnitCastingInfo(bar.Unit);
 		if (startTime) then
 			bar.Elapsed = (GetTime() - (startTime / 1000));
 		end
 	else
-		local _, _, _, _, _, endTime = UnitChannelInfo(bar.UnitID);
+		local _, _, _, _, _, endTime = UnitChannelInfo(bar.Unit);
 		if ( endTime ) then
 			bar.Elapsed = ((endTime / 1000) - GetTime());
 		end
@@ -154,7 +159,7 @@ function BobsCastingBar_OnEvent(bar, event, ...)
 
 	-- If the player is not entering world then we need to check the unit id to make sure the event is for this bar.
 	local arg1 = ...;
-	if (event ~= "PLAYER_ENTERING_WORLD") and (arg1 ~= bar.UnitID) then
+	if (event ~= "PLAYER_ENTERING_WORLD") and (arg1 ~= bar.Unit) then
 		-- This is not this unit's event so just return.
 		return;
 	end
@@ -348,14 +353,14 @@ function ValidateBar(bar)
 		return false;
 	end
 
-	-- Check to see if the UnitID is set.
-	local unitID = bar.UnitID
-	if (not unitID) then 
+	-- Check to see if the Unit is set.
+	local Unit = bar.Unit
+	if (not Unit) then 
 		return false;
 	end
 
 	-- Make sure the unit actually exists.
-	if (not UnitExists(unitID)) then
+	if (not UnitExists(Unit)) then
 		return false;
 	end
 
@@ -364,10 +369,10 @@ function ValidateBar(bar)
 end
 
 function UnitEventHandlers.PLAYER_ENTERING_WORLD(bar)
-	if (UnitChannelInfo(bar.UnitID)) then
-		UnitEventHandlers["UNIT_SPELLCAST_CHANNEL_START"](bar, bar.UnitID);
-	elseif (UnitCastingInfo(bar.UnitID)) then
-		UnitEventHandlers["UNIT_SPELLCAST_START"](bar, bar.UnitID);
+	if (UnitChannelInfo(bar.Unit)) then
+		UnitEventHandlers["UNIT_SPELLCAST_CHANNEL_START"](bar, bar.Unit);
+	elseif (UnitCastingInfo(bar.Unit)) then
+		UnitEventHandlers["UNIT_SPELLCAST_START"](bar, bar.Unit);
 	else
 	    BobsCastingBar_FinishSpell(bar);
 	end
