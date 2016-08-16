@@ -10,8 +10,7 @@ function BobsTimerBar_Create(name, parent)
 
 	timer.Text = timer:CreateFontString(nil, "ARTWORK", "BobsToolboxFont");
 	BobbyCode:SetLabelFont(timer.Text, color, 10, true);
-	timer.Text:SetPoint("LEFT", timer, "LEFT", 2, 0);
-
+	
 	timer.Time = timer:CreateFontString(nil, "ARTWORK", "BobsToolboxFont");
 	BobbyCode:SetLabelFont(timer.Time, color, 8, true);
 	timer.Time:SetPoint("RIGHT", timer, "RIGHT", 0, 0);
@@ -43,6 +42,7 @@ function BobsTimerBar_Initialize(timer, text, icon)
 		timer.Text:SetPoint("LEFT", timer, "LEFT", 2, -1);
 	end
 	
+	timer.Text:SetPoint("RIGHT", timer.Time, "LEFT", -2, 0);
 	timer.Text:SetText(text);
 	timer.Icon:SetTexture(icon);
 

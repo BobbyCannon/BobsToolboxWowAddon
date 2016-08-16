@@ -62,6 +62,8 @@ function BobsMinimapButtons:GrabButtons(frame)
 				-- Do nothing because the button is already gathered.
 			elseif (BobbyCode:TableContains(BlockedButtons, buttonName)) then
 				-- Do nothing because the button is blocked.
+			elseif (strfind(buttonName, "HandyNotes") == 1) then
+				-- Do nothing because this is a handy note.
 			elseif (strfind(buttonName, "GatherNote") == 1) then
 				-- Do nothing because this is a gatherer note.
 			elseif (strfind(buttonName, "GatherMate") == 1) then

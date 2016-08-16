@@ -23,7 +23,7 @@ function BobsExtraPowerFrame:Initialize()
 	end
 
 	-- Create the icons.
-	local count = 5;
+	local count = 10;
 	for i = 1, count do
 		BobsExtraPowerFrame.Indicator[i] = BobsExtraPowerFrame:CreateTexture();
 		BobsExtraPowerFrame.Indicator[i]:SetTexture(image);
@@ -59,26 +59,18 @@ end
 function BobsExtraPowerFrame:UpdateExtraPower()
 	local count = 0;
 	
-	if (BobsToolbox.PlayerClass == "Priest") then
-		count = UnitPower("player", SPELL_POWER_SHADOW_ORBS);
-	elseif (BobsToolbox.PlayerClass == "Warlock") then
-		count = UnitPower("player", SPELL_POWER_SOUL_SHARDS);
-	elseif (BobsToolbox.PlayerClass == "Paladin") then
-		count = UnitPower("player", SPELL_POWER_HOLY_POWER);
-	elseif (BobsToolbox.PlayerClass == "Rogue") then
+	if (BobsToolbox.PlayerClass == "Rogue") then
 		count = GetComboPoints("player", "target");
-	elseif (BobsToolbox.PlayerClass == "Monk") then
-		count = UnitPower("player", SPELL_POWER_CHI );
 	else
 		return;
 	end
 
 	if (BobsToolboxSettings.LayoutMode) then
 		count = 5;
-	end		
+	end
 
 	-- Show or hide icons.
-	for x = 1, 5 do
+	for x = 1, 10 do
 		local icon = BobsExtraPowerFrame.Indicator[x];
 		if (x <= count) then
 			icon:Show();
@@ -91,16 +83,8 @@ function BobsExtraPowerFrame:UpdateExtraPower()
 end
 
 function BobsExtraPowerFrame:GetUnitIconSettings()
-	if ((BobsToolbox.PlayerClass == "Priest") and (BobsToolbox.PlayerSpec)) then
-		return BobbyCode.Texture.ShadowOrbs, 0, 1, 0, 1;
-	elseif (BobsToolbox.PlayerClass == "Warlock") then
-		return BobbyCode.Texture.WarlockShard, 0.01562500, 0.42187500, 0.14843750, 0.32812500;
-	elseif (BobsToolbox.PlayerClass == "Paladin") then
-		return BobbyCode.Texture.PaladinPower, 0.00390625, 0.14453125, 0.64843750, 0.82031250;
-	elseif (BobsToolbox.PlayerClass == "Rogue") then
+	if (BobsToolbox.PlayerClass == "Rogue") then
 		return BobbyCode.Texture.RogueDot, 0, 1, 0, 1;
-	elseif (BobsToolbox.PlayerClass == "Monk") then
-		return BobbyCode.Texture.MonkOrbs, 0.00390625, 0.08593750, 0.71093750, 0.87500000;
 	end
 end
 

@@ -84,6 +84,54 @@ function BobbyCode:CreateButton(name, parent, template)
 	return button;
 end
 
+function BobbyCode:CreateBuffButton(name, parent, id, unit, filter)
+    local frame = CreateFrame("Button", name, parent);
+	frame:SetFrameLevel(parent:GetFrameLevel() + 1);
+    frame:SetFrameStrata("BACKGROUND");
+    frame:SetWidth(20);
+    frame:SetHeight(20);
+
+	if (id ~= nil) then
+		frame:SetID(id);
+
+		frame:SetScript("OnEnter", function(self)
+			-- TODO: This is incorrrect. Need to fix.
+			GameTooltip:SetOwner(UIParent, "ANCHOR_PRESERVE");
+			GameTooltip:SetUnitAura(self:GetAttribute("unit"), self:GetID(), self.Filter);
+		end);
+       
+		frame:SetScript("OnLeave", function(self)
+		    GameTooltip:Hide();
+        end);
+	end
+
+	if (unit ~= nil) then
+		frame:SetAttribute("unit", unit);
+	end
+
+	if (filter ~= nil) then
+		frame.Filter = filter;
+	end
+
+	frame.Icon = frame:CreateTexture(name .. "Icon", "BACKGROUND");
+	frame.Icon:SetAllPoints(frame);
+	
+    frame.Count = frame:CreateFontString(name .. "Count", "ARTWORK", "NumberFontNormalSmall");
+    frame.Count:SetPoint("BOTTOMRIGHT", 3, 0);
+    
+    frame.Duration = frame:CreateFontString(name .. "Duration", "ARTWORK", "GameFontNormalSmall");
+    frame.Duration:SetPoint("TOP", frame, "BOTTOM");
+    
+    frame.Cooldown = CreateFrame("Cooldown", name .. "Cooldown", frame, "CooldownFrameTemplate");
+    frame.Cooldown:SetDrawEdge(true);
+    frame.Cooldown:SetReverse(true);
+    frame.Cooldown:SetPoint("CENTER");
+    frame.Cooldown:SetWidth(24);
+    frame.Cooldown:SetHeight(24);
+    
+    return frame;
+end
+
 function BobbyCode:Unfade(region)
 	region.FadeLevel = 0;
 	region:SetAlpha(1.0) 
@@ -385,7 +433,7 @@ function BobbyCode:GetUnitReactionColor(unit)
 		elseif UnitCanAttack("player", unit) then
 			color = FACTION_BAR_COLORS[4]; -- Neutral
 		end
-	elseif UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit) then
+	elseif UnitIsTapDenied(unit) then
 		color = BobbyCode.Color.Gray;
 	else
 		local reaction = UnitReaction(unit, "player");
@@ -418,7 +466,7 @@ function BobbyCode:GetUnitHealthPercentage(unit)
 end
 
 function BobbyCode:GetUnitPowerPercentage(unit)
-	local max = UnitPowerMax(unit);
+	local max = UnitPowerMax(unit, UnitPowerType(unit));
 	local current = UnitPower(unit);
 	return math.ceil((current / max) * 100);
 end
@@ -642,23 +690,6 @@ function BobbyCode:RemoveForeignValuesFromTable(table, defaults)
    end
 end
 
---
--- Prints the table of values.
---
-function BobbyCode:PrintTable(object)
-	if (object == nil) then
-		return;
-	end
-	
-	for index, value in pairs(object) do
-		if (type(value) == "table") then
-			BobbyCode:PrintTable(value);
-		else
-			BobbyCode:Print(index, " : ", value);
-		end
-	end
-end
- 
 function BobbyCode:FormatNumber(current)
 	if (current > 1000000) then
 		return string.format("%.1fm", current / 1000000);
@@ -749,6 +780,97 @@ function BobbyCode:HideBlizzardTargetFrame()
 	ComboFrame:UnregisterAllEvents();
 	ComboFrame:Hide();
 	ComboFrame.Show = function() end;
+end
+
+function BobbyCode:HideBlizzardPartyFrame()
+	for i=1, MAX_PARTY_MEMBERS do
+		local name = "PartyMemberFrame" .. i
+		_G[name]:UnregisterAllEvents();
+		_G[name]:Hide();
+		_G[name].Show = function() end;
+		_G[name .. "HealthBar"]:UnregisterAllEvents();
+		_G[name .. "HealthBar"]:Hide();
+		_G[name .. "HealthBar"].Show = function() end;
+		_G[name .. "ManaBar"]:UnregisterAllEvents();
+		_G[name .. "ManaBar"]:Hide();
+		_G[name .. "ManaBar"].Show = function() end;
+	end
+	
+	if (CompactPartyFrame) then
+		CompactPartyFrame:UnregisterAllEvents();
+		CompactPartyFrame:Hide();
+		CompactPartyFrame.Show = function() end;
+	end
+end
+
+function BobbyCode:HideBlizzardRaidFrame()
+	if (CompactRaidFrameManager) then
+		local function hideRaid() 
+			CompactRaidFrameManager:UnregisterAllEvents()
+			CompactRaidFrameContainer:UnregisterAllEvents()
+			
+			if (InCombatLockdown()) then 
+				return;
+			end
+			
+			CompactRaidFrameManager:Hide()
+			CompactRaidFrameManager_SetSetting("IsShown", "0")
+		end
+			
+		hooksecurefunc("CompactRaidFrameManager_UpdateShown", function() hideRaid() end);
+			
+		hideRaid()
+		CompactRaidFrameContainer:HookScript("OnShow", hideRaid)
+		CompactRaidFrameManager:HookScript("OnShow", hideRaid)
+	end
+end
+
+function BobbyCode:UpdateBuffs(unit, array, namePrefix, parent)
+	return self:UpdateBuffsBase(UnitBuff, unit, array, namePrefix, parent);
+end
+
+function BobbyCode:UpdateDebuffs(unit, array, namePrefix, parent)
+	return self:UpdateBuffsBase(UnitDebuff, unit, array, namePrefix, parent);
+end
+
+function BobbyCode:UpdateBuffsBase(buffFunction, unit, buttonArray, namePrefix, parent)
+	local index = 1;
+	local name, rank, icon, count, debuffType, duration, expirationTime = buffFunction(unit, index);
+    local filter = BobbyCode:Select(buffFunction == UnitBuff, "HELP", "HARMFUL");
+		
+	while icon do
+		-- Check to see if the button exist.
+        if (buttonArray[index] == nil) then 
+			-- Button doesn't exist so create one.
+            buttonArray[index] = BobbyCode:CreateBuffButton(namePrefix .. index, parent, index, unit, filter);
+        end
+        
+		-- Update the icon.
+		buttonArray[index].Icon:SetTexture(icon);
+                    
+		-- Update the count.
+		if count and (count > 1) then
+			buttonArray[index].Count:SetText(count);
+			buttonArray[index].Count:Show();
+		else
+			buttonArray[index].Count:Hide();
+		end
+
+		-- Update the duration.
+		if duration and expirationTime and (duration > 0) then
+			buttonArray[index].Cooldown:SetCooldown(expirationTime - duration, duration);
+			buttonArray[index].Cooldown:Show();
+		else
+			buttonArray[index].Cooldown:Hide();
+		end
+                    
+		-- Update the index, get the next buff.
+        index = index + 1;
+        name, rank, icon, count, debuffType, duration, expirationTime = buffFunction(unit, index);
+    end
+
+	-- Return the amount of buffs found.
+	return index - 1;
 end
 
 function BobbyCode:AnchorFrameArray(frameArray, frameLength, framesPerRow, stackRight, stackDown, baseAnchor)

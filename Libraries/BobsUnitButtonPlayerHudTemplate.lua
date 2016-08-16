@@ -143,7 +143,7 @@ end
 
 function BobsUnitButtonPlayerHudTemplate:UpdatePower(button)
 	-- See if the unit is dead.
-	if (button.IsDeadOrGhost) or ((not button.HasTarget) and ((UnitPower(button.Unit) == UnitPowerMax(button.Unit)))) then
+	if (button.IsDeadOrGhost) or ((not button.HasTarget) and ((UnitPower(button.Unit) == UnitPowerMax(button.Unit)) or (UnitPower(button.Unit) == 0))) then
 		button.Graphics.Power:Hide();
 		button.Graphics.PowerLabel:Hide();
 		return;

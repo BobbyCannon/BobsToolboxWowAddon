@@ -42,6 +42,10 @@ function BobsToolbox:OnEvent(event, ...)
 	UnitEventHandlers[event](self, ...);
 end
 
+function UnitEventHandlers:ACTIVE_TALENT_GROUP_CHANGED()
+	BobsToolbox.PlayerSpec = BobbyCode:GetPlayerSpec();
+end
+
 function UnitEventHandlers:PLAYER_LOGIN()
 	BobsToolbox.PlayerName = UnitName("player");
 	BobsToolbox.PlayerClass = UnitClass("player");

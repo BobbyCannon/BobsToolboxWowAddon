@@ -226,7 +226,9 @@ function BobsRotationFrame:CheckForTargetDebuff(name)
 	end
 end
 
--- Returns true if you need the buff.
+--
+-- Returns true if the players needs the buff.
+--
 function BobsRotationFrame:CheckBuff(name, skipSpell, threshold)
 	-- Check to see if the spell is usable and that it's not the spell to skip.
 	if (name == skipSpell) or (name == BobsRotationFrame.CurrentlyCasting) then
@@ -246,10 +248,13 @@ function BobsRotationFrame:CheckBuff(name, skipSpell, threshold)
 		return (expirationTime - GetTime()) <= threshold;
 	end
 	
-	-- This buff is not available.
+	-- This buff present and the player doesn't need it.
 	return false;
 end
 
+--
+-- Returns true if the target needs the debuff.
+--
 function BobsRotationFrame:CheckDebuff(name, skipSpell, threshold)
 	-- Check to see if the spell is usable and that it's not the spell to skip.
 	if (name == skipSpell) or (name == BobsRotationFrame.CurrentlyCasting) then
@@ -259,7 +264,7 @@ function BobsRotationFrame:CheckDebuff(name, skipSpell, threshold)
 
 	-- Get the debuff of the target.
     local dbName, _, _, count, _, _, expirationTime = UnitAura("target", name, nil, "PLAYER|HARMFUL");
-	
+
 	-- Check to see if the debuff is there.
 	if (dbName == nil) then
 		-- The debuff is missing so return it.

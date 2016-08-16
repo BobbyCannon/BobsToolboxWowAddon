@@ -89,22 +89,6 @@ function BobsActionBars:HideStuff()
 	MainMenuXPBarTextureLeftCap:Hide();
 	MainMenuXPBarTextureMid:Hide();
 	MainMenuXPBarTextureRightCap:Hide();
-	ReputationWatchBarTexture0:SetTexture(nil);
-	ReputationWatchBarTexture0:Hide();
-	ReputationWatchBarTexture1:SetTexture(nil);
-	ReputationWatchBarTexture1:Hide();
-	ReputationWatchBarTexture2:SetTexture(nil);
-	ReputationWatchBarTexture2:Hide();
-	ReputationWatchBarTexture3:SetTexture(nil);
-	ReputationWatchBarTexture3:Hide();
-	ReputationXPBarTexture0:SetTexture(nil);
-	ReputationXPBarTexture0:Hide();
-	ReputationXPBarTexture1:SetTexture(nil);
-	ReputationXPBarTexture1:Hide();
-	ReputationXPBarTexture2:SetTexture(nil);
-	ReputationXPBarTexture2:Hide();
-	ReputationXPBarTexture3:SetTexture(nil);
-	ReputationXPBarTexture3:Hide();
 	MainMenuBarTexture0:SetAlpha(0.5);
 	MainMenuBarTexture1:SetAlpha(0.5);
 	MainMenuBarTexture2:SetAlpha(0.5);
@@ -135,7 +119,8 @@ function BobsActionBars:SetupHiddenBar(bar, hide)
 		bar.ShowChildren = function(self)
 			for i = 1, 12 do
 				if (self.Buttons[i]) then
-					_G[self.Buttons[i]:GetName() .. "Cooldown"]:Show();
+					_G[self.Buttons[i]:GetName() .. "Cooldown"]:SetSwipeColor(0, 0, 0, 0.75);
+					--_G[self.Buttons[i]:GetName() .. "Cooldown"]:Show();
 				end
 			end
 		end;
@@ -143,7 +128,8 @@ function BobsActionBars:SetupHiddenBar(bar, hide)
 		bar.HideChildren = function(self)
 			for i = 1, 12 do
 				if (self.Buttons[i]) then
-					_G[self.Buttons[i]:GetName() .. "Cooldown"]:Hide();
+					_G[self.Buttons[i]:GetName() .. "Cooldown"]:SetSwipeColor(0, 0, 0, 0);
+					--_G[self.Buttons[i]:GetName() .. "Cooldown"]:Hide();
 				end
 			end
 		end;
@@ -165,7 +151,11 @@ function BobsActionBars:SetupHiddenFrameButton(frame, button, hide)
 	if (not button.OldOnEventFunction and hide) then
 		button.OldOnEventFunction = button:GetScript("OnEnter");
 		button:SetScript("OnEnter", function(self)
-			BobbyCode:Unfade(frame);
+			--BobbyCode:Unfade(frame);
+
+			--if (not InCombatLockdown()) then
+			--	button.OldOnEventFunction(self);
+			--end
 		end);
 	end
 	

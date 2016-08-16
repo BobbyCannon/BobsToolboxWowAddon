@@ -10,6 +10,8 @@ local iconHeight = 24;
 function BobsUnitFrames:Initialize()
 	BobbyCode:HideBlizzardPlayerFrame();
 	BobbyCode:HideBlizzardTargetFrame();
+	BobbyCode:HideBlizzardPartyFrame();
+	BobbyCode:HideBlizzardRaidFrame();
 	
 	local playerSettings = { Unit = "player", Template = "Rectangle", EnableMouse = true };
 	local player = BobsUnitButton_Create("BobsUnitFramesPlayer", UIParent, playerSettings);
@@ -27,7 +29,7 @@ function BobsUnitFrames:Initialize()
 	playerHud:SetPoint("CENTER", UIParent);
 	BobsUnitFrames.PlayerHud = playerHud;
 	
-	local targetHudSettings = { Unit = "target", Template = "TargetHud", ShowRaidIcon = true, ShowRoleIcon = true };
+	local targetHudSettings = { Unit = "target", Template = "TargetHud", ShowRaidIcon = true, ShowRoleIcon = true, ShowBuffIcons = true };
 	local targetHud = BobsUnitButton_Create("BobsUnitFramesTargetHud", UIParent, targetHudSettings);
 	targetHud:SetPoint("CENTER", UIParent);
 	BobsUnitFrames.TargetHud = targetHud;
@@ -54,8 +56,8 @@ function BobsUnitFrames:Initialize()
 	partyFrame:SetAttribute("showSolo", true);
 	partyFrame:SetAttribute("unitsPerColumn", 5);
 	partyFrame:SetAttribute("maxColumns", 8);
-	partyFrame:SetAttribute("point", "TOP");
-	partyFrame:SetAttribute("columnAnchorPoint", "LEFT");
+	partyFrame:SetAttribute("point", "LEFT");
+	partyFrame:SetAttribute("columnAnchorPoint", "TOP");
 	partyFrame:SetAttribute("initial-anchor", "TOPLEFT,BobsUnitFramesPartyHeader,TOPLEFT,0,0");
 	partyFrame:SetAttribute("initialConfigFunction", BobsUnitButton_GetTemplateScriptByName("Square"));
 	partyFrame:ClearAllPoints();

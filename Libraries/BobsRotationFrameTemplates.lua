@@ -21,71 +21,56 @@ function BobsRotationPriestTemplate:GetNextSpell(skipSpell)
 		globalCooldown = globalCooldown / 2;
 	end
 
-	local hasClarityOfPower = select(4, GetTalentInfo(7,1,1));
-	if (hasClarityOfPower) then
-		return BobsRotationPriestTemplate:ProcessAsClarityOfPower(skipSpell, globalCooldown);
-	end
-	
-	return BobsRotationPriestTemplate:ProcessAsDotWeaving(skipSpell, globalCooldown);
+	return BobsRotationPriestTemplate:Process(skipSpell, globalCooldown);
 end
 
-function BobsRotationPriestTemplate:ProcessAsClarityOfPower(skipSpell, globalCooldown)
-	if (BobsRotationFrame:SpellIsReady("Mind Blast", skipSpell, globalCooldown)) then
-		return "Mind Blast";
+function BobsRotationPriestTemplate:Process(skipSpell, globalCooldown)
+	if (BobsRotationFrame:SpellIsReady("Void Eruption", skipSpell, globalCooldown)) then
+		return "Void Eruption";
 	end
 	
-	if (BobsRotationFrame:SpellIsReady("Shadow Word: Death", skipSpell, globalCooldown)) then
-        local healthLeft = UnitHealth("target") / UnitHealthMax("target");
-        if (healthLeft <= 0.25) then
-            return "Shadow Word: Death";
-        end
-	end
-	
-	if (BobsRotationFrame:CheckForBuff("Surge of Darkness") >= 3) then
-		return "Mind Spike";
-	end
-	
-	if ((skipSpell ~= "Mind Flay") and (BobsRotationFrame:CheckForBuff("Shadow Word: Insanity") > 0)) then
-		return "Mind Flay";
-    end
-	
-	if (BobsRotationFrame:CheckForTargetDebuff("Devouring Plague") > 0) then
-		return "Mind Flay";
-    end
-	
-	return "Mind Spike";
-end
-
-function BobsRotationPriestTemplate:ProcessAsDotWeaving(skipSpell, globalCooldown)
-	if ((skipSpell ~= "Mind Flay") and (BobsRotationFrame:CheckForBuff("Shadow Word: Insanity") > 0)) then
-		return "Mind Flay";
-    end
-	
-	if (BobsRotationFrame:SpellIsReady("Devouring Plague", skipSpell, globalCooldown)) then
-		local orbs = UnitPower("player", SPELL_POWER_SHADOW_ORBS);
-		if (orbs >= 3) then
-			return "Devouring Plague";
-		end
-	end
-	
-	if (BobsRotationFrame:SpellIsReady("Mind Blast", skipSpell, globalCooldown)) then
-		return "Mind Blast";
-	end
-	
-	if (BobsRotationFrame:SpellIsReady("Shadow Word: Death", skipSpell, globalCooldown)) then
-        local healthLeft = UnitHealth("target") / UnitHealthMax("target");
-        if (healthLeft <= 0.25) then
-            return "Shadow Word: Death";
-        end
-	end	
-		
-	if (BobsRotationFrame:CheckDebuff("Shadow Word: Pain", skipSpell, 5)) then
+	if (BobsRotationFrame:CheckDebuff("Shadow Word: Pain", skipSpell, globalCooldown * 2)) then
 		return "Shadow Word: Pain";
     end
 
     if (BobsRotationFrame:CheckDebuff("Vampiric Touch", skipSpell, 4)) then
    		return "Vampiric Touch";
     end
+	
+	if (BobsRotationFrame:SpellIsReady("Shadow Word: Death", skipSpell, globalCooldown)) then
+        local healthLeft = UnitHealth("target") / UnitHealthMax("target");
+        if (healthLeft <= 0.25) then
+            return "Shadow Word: Death";
+        end
+	end
+	
+	if (BobsRotationFrame:SpellIsReady("Mind Blast", skipSpell, globalCooldown)) then
+		return "Mind Blast";
+	end
+	
+	return "Mind Flay";
+end
+
+function BobsRotationPriestTemplate:ProcessAsNormal(skipSpell, globalCooldown)
+	
+
+	if (BobsRotationFrame:SpellIsReady("Devouring Plague", skipSpell, globalCooldown)) then
+		local orbs = UnitPower("player", SPELL_POWER_SHADOW_ORBS);
+		if (orbs >= 3) then
+			return "Devouring Plague";
+		end
+	end
+
+	if (BobsRotationFrame:SpellIsReady("Shadow Word: Death", skipSpell, globalCooldown)) then
+        local healthLeft = UnitHealth("target") / UnitHealthMax("target");
+        if (healthLeft <= 0.25) then
+            return "Shadow Word: Death";
+        end
+	end
+		
+	if (BobsRotationFrame:SpellIsReady("Mind Blast", skipSpell, globalCooldown)) then
+		return "Mind Blast";
+	end
 		
 	return "Mind Flay";
 end
@@ -122,43 +107,57 @@ BobsRotationRogueTemplate = {};
 
 function BobsRotationRogueTemplate:GetNextSpell(skipSpell)
 	if (BobsToolbox.PlayerSpec == "Assassination") then
-		return BobsRotationRogueTemplate:GetNextSpellForAssassination()
+		return BobsRotationRogueTemplate:GetNextSpellForAssassination(skipSpell)
 	end
 	
 	if (BobsToolbox.PlayerSpec == "Subtlety") then
-		return BobsRotationRogueTemplate:GetNextSpellForSubtlety()
+		return BobsRotationRogueTemplate:GetNextSpellForSubtlety(skipSpell)
 	end
 end
 
-function BobsRotationRogueTemplate:GetNextSpellForAssassination()
+function BobsRotationRogueTemplate:GetNextSpellForAssassination(skipSpell)
 	local comboPoints = GetComboPoints("player", "target");
 
-	if (BobsRotationFrame:CheckDebuff("Rupture", skipSpell, 8) and (comboPoints == 5)) then
+	if (BobsRotationFrame:CheckDebuff("Rupture", skipSpell, 3) and (comboPoints >= 5)) then
 		return "Rupture";
+	end
+
+	if (BobsRotationFrame:CheckDebuff("Garrote", skipSpell, 3) and BobsRotationFrame:SpellIsReady("Garrote", skipSpell, globalCooldown) ) then
+		return "Garrote";
 	end
 	
 	if (BobsRotationFrame:SpellIsReady("Envenom", skipSpell, globalCooldown) and (comboPoints >= 5)) then
 		return "Envenom";
 	end
-	
-	if (BobsRotationFrame:CheckForBuff("Blindside") > 0 and (skipSpell ~= "Blindside")) then
-		return "Dispatch";
-	end
-
-	local targetHealth = BobbyCode:GetUnitHealthPercentage("target");
-	if (targetHealth >= 35) then
-		return "Mutilate";
-	else
-		return "Dispatch";
-	end
+		
+	return "Mutilate";
 end
 
 function BobsRotationRogueTemplate:GetNextSpellForSubtlety()
+	local comboPoints = GetComboPoints("player", "target");
+	
+	if (BobsRotationFrame:CheckDebuff("Rupture", skipSpell, 7) and (comboPoints == 5)) then
+		return "Rupture";
+	end
+	
+	if (BobsRotationFrame:CheckDebuff("Hemorrhage", skipSpell, 7)) then
+		return "Hemorrhage";
+	end
+	
+	if (BobsRotationFrame:SpellIsReady("Eviscerate", skipSpell, globalCooldown) and (comboPoints >= 5)) then
+		return "Eviscerate";
+	end
+
 	return "Backstab";
 end
 
 function BobsRotationRogueTemplate:GetExtraSpell()
 	local globalCooldown = BobsRotationFrame:GetGlobalCooldown();
+	local comboPoints = GetComboPoints("player", "target");
+	
+	if (BobsRotationFrame:SpellIsReady("Death from Above", nil, globalCooldown) and (comboPoints == 5)) then
+		return "Death from Above";
+	end
 
 	if (BobsRotationFrame:SpellIsReady("Vendetta", nil, globalCooldown)) then
 		return "Vendetta";
