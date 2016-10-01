@@ -218,11 +218,11 @@ function BobsRotationFrame:CheckForTargetDebuff(name)
 	local dbName, _, _, count = UnitAura("target", name, nil, "PLAYER|HARMFUL");
 
 	if (dbName ~= name) then
-		return 0;
+		return false;
 	elseif (dbName == name) and (count == 0) then
-		return 1;
+		return true;
 	else
-		return count;
+		return true;
 	end
 end
 
@@ -263,7 +263,7 @@ function BobsRotationFrame:CheckDebuff(name, skipSpell, threshold)
 	end
 
 	-- Get the debuff of the target.
-    local dbName, _, _, count, _, _, expirationTime = UnitAura("target", name, nil, "PLAYER|HARMFUL");
+	local dbName, _, _, count, _, _, expirationTime = UnitAura("target", name, nil, "PLAYER|HARMFUL");
 
 	-- Check to see if the debuff is there.
 	if (dbName == nil) then

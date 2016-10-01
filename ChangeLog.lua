@@ -7,8 +7,13 @@
 --
 --6.2.3.0
 -- 
--- Updated rotation for Shadow Priest
+-- Updated rotation for Shadow Priest.
 --
 --7.0.0
 --
--- Release for new expansion
+-- Release for new expansion.
+--
+--7.0.1
+--
+-- Fixed minor issue with extra power bar.
+-- Updated Rogue and Priest rotations.

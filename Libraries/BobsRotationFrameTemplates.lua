@@ -52,7 +52,6 @@ function BobsRotationPriestTemplate:Process(skipSpell, globalCooldown)
 end
 
 function BobsRotationPriestTemplate:ProcessAsNormal(skipSpell, globalCooldown)
-	
 
 	if (BobsRotationFrame:SpellIsReady("Devouring Plague", skipSpell, globalCooldown)) then
 		local orbs = UnitPower("player", SPELL_POWER_SHADOW_ORBS);
@@ -122,8 +121,16 @@ function BobsRotationRogueTemplate:GetNextSpellForAssassination(skipSpell)
 		return "Rupture";
 	end
 
+	if (BobsRotationFrame:CheckDebuff("Hemorrhage", skipSpell, 3) and BobsRotationFrame:SpellIsReady("Hemorrhage", skipSpell, globalCooldown) ) then
+		return "Hemorrhage";
+	end
+
 	if (BobsRotationFrame:CheckDebuff("Garrote", skipSpell, 3) and BobsRotationFrame:SpellIsReady("Garrote", skipSpell, globalCooldown) ) then
 		return "Garrote";
+	end
+
+	if (BobsRotationFrame:CheckForTargetDebuff("Garrote") and BobsRotationFrame:SpellIsReady("Exsanguinate", skipSpell, globalCooldown)) then
+		return "Exsanguinate";
 	end
 	
 	if (BobsRotationFrame:SpellIsReady("Envenom", skipSpell, globalCooldown) and (comboPoints >= 5)) then
@@ -154,12 +161,16 @@ end
 function BobsRotationRogueTemplate:GetExtraSpell()
 	local globalCooldown = BobsRotationFrame:GetGlobalCooldown();
 	local comboPoints = GetComboPoints("player", "target");
-	
-	if (BobsRotationFrame:SpellIsReady("Death from Above", nil, globalCooldown) and (comboPoints == 5)) then
-		return "Death from Above";
-	end
 
 	if (BobsRotationFrame:SpellIsReady("Vendetta", nil, globalCooldown)) then
 		return "Vendetta";
+	end
+
+	if (BobsRotationFrame:SpellIsReady("Kingsbane", skipSpell, globalCooldown)) then
+		return "Kingsbane";
+	end
+	
+	if (BobsRotationFrame:SpellIsReady("Death from Above", nil, globalCooldown) and (comboPoints == 5)) then
+		return "Death from Above";
 	end
 end

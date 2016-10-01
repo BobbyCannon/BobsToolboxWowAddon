@@ -76,6 +76,14 @@ function BobbyCode:CreateFrame(name, parent, template)
     return frame;
 end
 
+function BobbyCode:CreateCheckButton(name, parent, template)
+    local button = CreateFrame("CheckButton", name, parent, template);
+	button:SetFrameStrata("MEDIUM");
+	button:SetClampedToScreen(true);
+	button.FadeLevel = 0;
+	return button;
+end
+
 function BobbyCode:CreateButton(name, parent, template)
     local button = CreateFrame("Button", name, parent, template);
 	button:SetFrameStrata("MEDIUM");

@@ -114,7 +114,7 @@ function BobsCurrencyFrame:Update()
 	frame.ConquestIcon:SetTexture(texture);
 	frame.ConquestLabel:SetText(currentAmount);
 	
-	name, currentAmount, texture, earnedThisWeek, weeklyMax, totalMax, isDiscovered = GetCurrencyInfo(824);
+	name, currentAmount, texture, earnedThisWeek, weeklyMax, totalMax, isDiscovered = GetCurrencyInfo(1220);
 	frame.GarrisonResourceIcon:SetTexture(texture);
 	frame.GarrisonResourceLabel:SetText(currentAmount);
 	
