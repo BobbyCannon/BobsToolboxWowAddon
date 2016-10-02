@@ -4,6 +4,7 @@
 local addonName, addon = ...
 local version = GetAddOnMetadata(addonName, "Version");
 local name = "BobsConfiguration";
+
 BobsConfiguration = BobbyCode:CreateFrame(name, UIParent);
 BobsConfiguration.name = addonName;
 
@@ -15,7 +16,6 @@ BobsToolboxSettingsDefaults = {
 	},
 	ActionBars = {
 		HideMainBarOutOfCombat = false,
-		HideMultiBarLeftOutOfCombat = true,
 		HideMultiBarRightOutOfCombat = true,
 		HideMultiBarBottomLeftOutOfCombat = true,
 		HideMultiBarBottomRightOutOfCombat = true
@@ -39,25 +39,21 @@ function BobsConfiguration:Initialize()
 
 	local mainBarOutOfCombat = BobsConfiguration:CreateCheckbox("HideMainBarOutOfCombat", "Main Bar");
 	mainBarOutOfCombat:SetPoint("TOPLEFT", hideBarsHeader, "BOTTOMLEFT", 0, -4);
-	
-	local multiBarRightOutOfCombat = BobsConfiguration:CreateCheckbox("HideMultiBarRightOutOfCombat", "Right Bar");
-	multiBarRightOutOfCombat:SetPoint("TOPLEFT", mainBarOutOfCombat, "BOTTOMLEFT", 0, -4);
+
+	local rightBarOutOfCombat = BobsConfiguration:CreateCheckbox("HideMultiBarRightOutOfCombat", "Right Bar");
+	rightBarOutOfCombat:SetPoint("TOPLEFT", hideBarsHeader, "BOTTOMLEFT", 130, -4);
+	rightBarOutOfCombat:SetFrameLevel(mainBarOutOfCombat:GetFrameLevel() + 1);
 		
-	local multiBarRight2OutOfCombat = BobsConfiguration:CreateCheckbox("HideMultiBarLeftOutOfCombat", "Right Bar 2");
-	multiBarRight2OutOfCombat:SetPoint("TOPLEFT", multiBarRightOutOfCombat, "BOTTOMLEFT", 0, -4);
-	
 	local multiBarBottomLeftOutOfCombat = BobsConfiguration:CreateCheckbox("HideMultiBarBottomLeftOutOfCombat", "Bottom Left Bar");
-	multiBarBottomLeftOutOfCombat:SetPoint("TOPLEFT", hideBarsHeader, "BOTTOMLEFT", 110, -4);
-	multiBarBottomLeftOutOfCombat:SetFrameLevel(mainBarOutOfCombat:GetFrameLevel() + 1);
+	multiBarBottomLeftOutOfCombat:SetPoint("TOPLEFT", mainBarOutOfCombat, "BOTTOMLEFT", 0, -4);
 
 	local multiBarBottomRightOutOfCombat = BobsConfiguration:CreateCheckbox("HideMultiBarBottomRightOutOfCombat", "Bottom Right Bar");
-	multiBarBottomRightOutOfCombat:SetPoint("TOPLEFT", multiBarBottomLeftOutOfCombat, "BOTTOMLEFT", 0, -4);
-	multiBarBottomRightOutOfCombat:SetFrameLevel(mainBarOutOfCombat:GetFrameLevel() + 1);
+	multiBarBottomRightOutOfCombat:SetPoint("TOPLEFT", rightBarOutOfCombat, "BOTTOMLEFT", 0, -4);
+	multiBarBottomRightOutOfCombat:SetFrameLevel(multiBarBottomLeftOutOfCombat:GetFrameLevel() + 1);
 end
 
 function BobsConfiguration:ApplySettings()
 	_G[name .. "HideMainBarOutOfCombat"]:SetChecked(BobsToolboxSettings.ActionBars.HideMainBarOutOfCombat);
-	_G[name .. "HideMultiBarLeftOutOfCombat"]:SetChecked(BobsToolboxSettings.ActionBars.HideMultiBarLeftOutOfCombat);
 	_G[name .. "HideMultiBarRightOutOfCombat"]:SetChecked(BobsToolboxSettings.ActionBars.HideMultiBarRightOutOfCombat);
 	_G[name .. "HideMultiBarBottomLeftOutOfCombat"]:SetChecked(BobsToolboxSettings.ActionBars.HideMultiBarBottomLeftOutOfCombat);
 	_G[name .. "HideMultiBarBottomRightOutOfCombat"]:SetChecked(BobsToolboxSettings.ActionBars.HideMultiBarBottomRightOutOfCombat);
@@ -65,7 +61,6 @@ end
 
 function BobsConfiguration:SaveChanges()
 	BobsToolboxSettings.ActionBars.HideMainBarOutOfCombat = _G[name .. "HideMainBarOutOfCombat"]:GetChecked();
-	BobsToolboxSettings.ActionBars.HideMultiBarLeftOutOfCombat = _G[name .. "HideMultiBarLeftOutOfCombat"]:GetChecked();
 	BobsToolboxSettings.ActionBars.HideMultiBarRightOutOfCombat = _G[name .. "HideMultiBarRightOutOfCombat"]:GetChecked();
 	BobsToolboxSettings.ActionBars.HideMultiBarBottomLeftOutOfCombat = _G[name .. "HideMultiBarBottomLeftOutOfCombat"]:GetChecked();
 	BobsToolboxSettings.ActionBars.HideMultiBarBottomRightOutOfCombat = _G[name .. "HideMultiBarBottomRightOutOfCombat"]:GetChecked();

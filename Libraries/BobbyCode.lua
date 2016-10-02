@@ -143,10 +143,6 @@ end
 function BobbyCode:Unfade(region)
 	region.FadeLevel = 0;
 	region:SetAlpha(1.0) 
-	
-	if (region.ShowChildren) then
-		region:ShowChildren();
-	end
 end
 
 function BobbyCode:StartFade(region)
@@ -156,17 +152,13 @@ function BobbyCode:StartFade(region)
 end
 
 function BobbyCode:FadeRegion(region)
-	if (region.FadeLevel <= 0) then
+	if (region.FadeLevel == nil or region.FadeLevel <= 0) then
 		return;
 	end
 	
 	region.FadeLevel = region:GetAlpha() - (1/20);
 	if (region.FadeLevel <= 0) then
 		region.FadeLevel = 0;
-		
-		if (region.HideChildren) then
-			region:HideChildren();
-		end
 	end
 		
 	region:SetAlpha(region.FadeLevel);

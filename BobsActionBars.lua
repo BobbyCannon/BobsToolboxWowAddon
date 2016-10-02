@@ -14,11 +14,57 @@ function BobsActionBars:Initialize()
 	BobsActionBars:SetPoint("BOTTOM", UIParent);
 	BobsActionBars:SetHeight(86);
 	BobsActionBars:SetWidth(1010);
-	BobsActionBars:ShowBackground(true);
+	--BobsActionBars:ShowBackground(true);
 	BobsActionBars:EnableMouse(true);
-	BobsActionBars:ResizeFrames();
 
+	BobbyCode:CreateFrame("MainBar", BobsActionBars);
+	MainBar.Buttons = {};
+	MultiBarRight.Buttons = {};
+	MultiBarBottomLeft.Buttons = {};
+	MultiBarBottomRight.Buttons = {};
+	StanceBarFrame.Buttons = {};
+
+	for i = 1, 12 do
+		MainBar.Buttons[i] = _G["ActionButton" .. i];
+		MainBar.Buttons[i]:SetParent(MainBar);
+		MultiBarRight.Buttons[i] = _G["MultiBarRightButton" .. i];
+		MultiBarBottomLeft.Buttons[i] = _G["MultiBarBottomLeftButton" .. i];
+		MultiBarBottomRight.Buttons[i] = _G["MultiBarBottomRightButton" .. i];
+	end
+	
+	for i = 1, NUM_STANCE_SLOTS do
+		StanceBarFrame.Buttons[i] = _G["StanceButton" .. i];
+		if (StanceBarFrame.Buttons[i]) then
+			_G["StanceButton" .. i .. "NormalTexture2"]:Hide();
+		end
+	end
+
+	for i = 1, 12 do
+		BobsActionBars:SetupHiddenFrameButton(MainBar, MainBar.Buttons[i], BobsToolboxSettings.ActionBars.HideMainBarOutOfCombat);
+		BobsActionBars:SetupHiddenFrameButton(MultiBarRight, MultiBarRight.Buttons[i], BobsToolboxSettings.ActionBars.HideMultiBarRightOutOfCombat);
+		BobsActionBars:SetupHiddenFrameButton(MultiBarBottomLeft, MultiBarBottomLeft.Buttons[i], BobsToolboxSettings.ActionBars.HideMultiBarBottomLeftOutOfCombat);
+		BobsActionBars:SetupHiddenFrameButton(MultiBarBottomRight, MultiBarBottomRight.Buttons[i], BobsToolboxSettings.ActionBars.HideMultiBarBottomRightOutOfCombat);
+	end
+	
+	BobsActionBars:SetupHiddenBar(MainBar, BobsToolboxSettings.ActionBars.HideMainBarOutOfCombat);
+	BobsActionBars:SetupHiddenBar(MultiBarRight, BobsToolboxSettings.ActionBars.HideMultiBarRightOutOfCombat);
+	BobsActionBars:SetupHiddenBar(MultiBarBottomLeft, BobsToolboxSettings.ActionBars.HideMultiBarBottomLeftOutOfCombat);
+	BobsActionBars:SetupHiddenBar(MultiBarBottomRight, BobsToolboxSettings.ActionBars.HideMultiBarBottomRightOutOfCombat);
+	
+	BobsActionBars:ResizeFrames();
 	BobsToolbox:RegisterTask("BobsActionBars", BobsActionBars.Timer, 1/20);
+end
+
+function BobsActionBars:ApplySettings()
+	if (OrderHallCommandBar.Show) then
+		OrderHallCommandBar:Hide();
+		OrderHallCommandBar.Show = function() end; 
+	end
+	
+	MainBar.FadeLevel = 0;
+	MultiBarRight.FadeLevel = 0;
+	MultiBarBottomLeft.FadeLevel = 0;
+	MultiBarBottomRight.FadeLevel = 0;
 end
 
 function BobsActionBars:ResizeFrames()
@@ -89,12 +135,12 @@ function BobsActionBars:ResizeFrames()
 	MainMenuBarLeftEndCap:SetParent(HiddenFrame)
 	MainMenuBarRightEndCap:SetParent(HiddenFrame)
 
-	MainMenuBar:ClearAllPoints();
-	MainMenuBar:SetPoint("BOTTOMLEFT", BobsActionBars, -3, 0);
-	MainMenuBar.SetPoint = function() end;
+	MainBar:ClearAllPoints();
+	MainBar:SetPoint("BOTTOMLEFT", BobsActionBars, 2, 3);
+	MainBar.SetPoint = function() end;
 
 	MultiBarBottomLeft:ClearAllPoints();
-	MultiBarBottomLeft:SetPoint("TOPLEFT", BobsActionBars, 5, -2);
+	MultiBarBottomLeft:SetPoint("TOPLEFT", BobsActionBars, 2, -2);
 	MultiBarBottomLeft.SetPoint = function() end;
 		
 	MultiBarBottomRight:ClearAllPoints();
@@ -114,6 +160,18 @@ function BobsActionBars:ResizeFrames()
 		local button = _G["MultiBarRightButton" .. i];
 		button:ClearAllPoints();
 		button:SetPoint("LEFT", _G["MultiBarRightButton" .. (i - 1)], "RIGHT", 6, 0);
+	end
+
+	MainBar:SetHeight(MultiBarBottomLeft:GetHeight());
+	MainBar:SetWidth(MultiBarBottomLeft:GetWidth());
+
+	_G["ActionButton1"]:ClearAllPoints();
+	_G["ActionButton1"]:SetPoint("LEFT", MainBar);
+
+	for i = 2, 12 do
+		local button = _G["ActionButton" .. i];
+		button:ClearAllPoints();
+		button:SetPoint("LEFT", _G["ActionButton" .. (i - 1)], "RIGHT", 6, 0);
 	end
 
 	-- Stance Bar
@@ -164,19 +222,79 @@ function BobsActionBars:ResizeWatchBar(bar)
 	bar.OverlayFrame.Text:Show();
 end
 
-function BobsActionBars:ApplySettings()
-	if (OrderHallCommandBar.Show) then
-		OrderHallCommandBar:Hide();
-		OrderHallCommandBar.Show = function() end; 
-	end
+function BobsActionBars:SetupHiddenBar(bar, hide)
+	bar.OldOnEnter = bar:GetScript("OnEnter");
+	bar:SetScript("OnEnter", function(self)
+		BobbyCode:Unfade(self);
+		if (bar.OldOnEnter) then		
+			bar:OldOnEnter(self);
+		end
+	end);
+end
+
+function BobsActionBars:SetupHiddenFrameButton(frame, button, hide)
+	button.OldOnEnter = button:GetScript("OnEnter");
+	button:SetScript("OnEnter", function(self)
+		BobbyCode:Unfade(frame);
+		if (button.OldOnEnter) then
+			button:OldOnEnter(self);
+		end
+	end);
+end
+
+function BobsActionBars:Unfade()
+	BobbyCode:Unfade(StanceBarFrame);
+	BobbyCode:Unfade(MainMenuBar);
+	BobbyCode:Unfade(MultiBarLeft);
+	BobbyCode:Unfade(MultiBarRight);
+	BobbyCode:Unfade(MultiBarBottomLeft);
+	BobbyCode:Unfade(MultiBarBottomRight);
 end
 
 function BobsActionBars:OnEvent(event, ...)
 	UnitEventHandlers[event](self, ...);
 end
 
+UnitEventHandlers.PLAYER_REGEN_DISABLED = BobsActionBars.Unfade;
+
 BobsActionBars:SetScript("OnEvent", BobsActionBars.OnEvent);
 
 function BobsActionBars:Timer()
+	if InCombatLockdown() then
+		return;
+	end
 
+	BobbyCode:FadeRegion(MainBar);
+	BobbyCode:FadeRegion(MultiBarRight);
+	BobbyCode:FadeRegion(MultiBarBottomLeft);
+	BobbyCode:FadeRegion(MultiBarBottomRight);
+	
+	local f = GetMouseFocus();
+	if (not f) then
+		return;
+	end
+
+	for i = 1, NUM_STANCE_SLOTS do
+		if (_G["StanceButton" .. i]) then
+			_G["StanceButton" .. i .. "NormalTexture2"]:Hide();
+		end
+	end
+	
+	if (f == WorldFrame) then
+		if (BobsToolboxSettings.ActionBars.HideMainBarOutOfCombat) then
+			BobbyCode:StartFade(MainBar);
+		end
+
+		if (BobsToolboxSettings.ActionBars.HideMultiBarRightOutOfCombat) then
+			BobbyCode:StartFade(MultiBarRight);
+		end
+
+		if (BobsToolboxSettings.ActionBars.HideMultiBarBottomLeftOutOfCombat) then
+			BobbyCode:StartFade(MultiBarBottomLeft);
+		end
+				
+		if (BobsToolboxSettings.ActionBars.HideMultiBarBottomRightOutOfCombat) then
+			BobbyCode:StartFade(MultiBarBottomRight);
+		end
+	end
 end
