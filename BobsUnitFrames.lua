@@ -15,12 +15,12 @@ function BobsUnitFrames:Initialize()
 	
 	local playerSettings = { Unit = "player", Template = "Rectangle", EnableMouse = true };
 	local player = BobsUnitButton_Create("BobsUnitFramesPlayer", UIParent, playerSettings);
-	player:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 10, 30);
+	player:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 4, 120);
 	BobsUnitFrames.Player = player;
 	
 	local targetSettings = { Unit = "target", Template = "Rectangle", EnableMouse = true };
 	local target = BobsUnitButton_Create("BobsUnitFramesTarget", UIParent, targetSettings);
-	target:SetPoint("BOTTOM", player, "TOP", 0, 6);
+	target:SetPoint("LEFT", player, "RIGHT", 6, 0);
 	BobsUnitFrames.Target = target;
 	RegisterUnitWatch(target);
 	

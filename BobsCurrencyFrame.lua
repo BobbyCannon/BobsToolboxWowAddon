@@ -7,38 +7,15 @@ local UnitEventHandlers = {}
 local frame = BobsCurrencyFrame;
 
 function BobsCurrencyFrame:Initialize()
-	frame:SetWidth(20);
-	frame:SetHeight(20);
+	frame:SetHeight(56);
+	frame:SetWidth(150);
+	frame:ShowBackground(false);
 	frame:ClearAllPoints();
-	frame:SetPoint("BOTTOMLEFT", UIParent, 12, 6);
-	
-	frame.HonorIcon = frame:CreateTexture();
-	frame.HonorIcon:SetDrawLayer("OVERLAY");
-	frame.HonorIcon:SetVertexColor(1, 1, 1, 1);
-	frame.HonorIcon:ClearAllPoints();
-	frame.HonorIcon:SetPoint("LEFT", frame, "LEFT", 0, 0);
-	frame.HonorIcon:SetHeight(20);
-	frame.HonorIcon:SetWidth(20);
-	
-	frame.HonorLabel = BobbyCode:CreateLabel(frame, "HonorLabel", "0", BobbyCode.Color.White, 12, true);
-	frame.HonorLabel:ClearAllPoints();
-	frame.HonorLabel:SetPoint("LEFT", frame.HonorIcon, "RIGHT", 2, 0);
-	
-	frame.ConquestIcon = frame:CreateTexture();
-	frame.ConquestIcon:SetDrawLayer("OVERLAY");
-	frame.ConquestIcon:SetVertexColor(1, 1, 1, 1);
-	frame.ConquestIcon:ClearAllPoints();
-	frame.ConquestIcon:SetPoint("LEFT", frame.HonorLabel, "RIGHT", 12, 0);
-	frame.ConquestIcon:SetHeight(20);
-	frame.ConquestIcon:SetWidth(20);
-	
-	frame.ConquestLabel = BobbyCode:CreateLabel(frame, "ConquestLabel", "0", BobbyCode.Color.White, 12, true);
-	frame.ConquestLabel:ClearAllPoints();
-	frame.ConquestLabel:SetPoint("LEFT", frame.ConquestIcon, "RIGHT", 2, 0);
+	frame:SetPoint("BOTTOMRIGHT", UIParent, -12, 40);
 	
 	frame.GoldLabel = BobbyCode:CreateLabel(frame, "GoldLabel", "0", BobbyCode.Color.White, 12, true);
 	frame.GoldLabel:ClearAllPoints();
-	frame.GoldLabel:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -8, 8);
+	frame.GoldLabel:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -6, 8);
 	
 	frame.GoldIcon = frame:CreateTexture();
 	frame.GoldIcon:SetDrawLayer("OVERLAY");
@@ -50,19 +27,19 @@ function BobsCurrencyFrame:Initialize()
 	frame.GoldIcon:SetHeight(20);
 	frame.GoldIcon:SetWidth(20);
 	
-	frame.GarrisonResourceLabel = BobbyCode:CreateLabel(frame, "GarrisonResourceLabel", "0", BobbyCode.Color.White, 12, true);
-	frame.GarrisonResourceLabel:ClearAllPoints();
-	frame.GarrisonResourceLabel:SetPoint("RIGHT", frame.GoldIcon, "LEFT", -8, 0);
+	frame.OrderResourceLabel = BobbyCode:CreateLabel(frame, "OrderResourceLabel", "0", BobbyCode.Color.White, 12, true);
+	frame.OrderResourceLabel:ClearAllPoints();
+	frame.OrderResourceLabel:SetPoint("RIGHT", frame.GoldIcon, "LEFT", -8, 0);
 	
-	frame.GarrisonResourceIcon = frame:CreateTexture();
-	frame.GarrisonResourceIcon:SetDrawLayer("OVERLAY");
-	frame.GarrisonResourceIcon:SetTexture(BobbyCode.Texture.GoldCoin);
-	frame.GarrisonResourceIcon:SetVertexColor(1, 1, 1, 1);
-	frame.GarrisonResourceIcon:SetAlpha(0.75);
-	frame.GarrisonResourceIcon:ClearAllPoints();
-	frame.GarrisonResourceIcon:SetPoint("RIGHT", frame.GarrisonResourceLabel, "LEFT", 0, 1);
-	frame.GarrisonResourceIcon:SetHeight(20);
-	frame.GarrisonResourceIcon:SetWidth(20);
+	frame.OrderResourceIcon = frame:CreateTexture();
+	frame.OrderResourceIcon:SetDrawLayer("OVERLAY");
+	frame.OrderResourceIcon:SetTexture(BobbyCode.Texture.GoldCoin);
+	frame.OrderResourceIcon:SetVertexColor(1, 1, 1, 1);
+	frame.OrderResourceIcon:SetAlpha(0.75);
+	frame.OrderResourceIcon:ClearAllPoints();
+	frame.OrderResourceIcon:SetPoint("RIGHT", frame.OrderResourceLabel, "LEFT", 0, 1);
+	frame.OrderResourceIcon:SetHeight(20);
+	frame.OrderResourceIcon:SetWidth(20);
 	
 	frame.ProfessionIcon1 = frame:CreateTexture();
 	frame.ProfessionIcon1:SetDrawLayer("OVERLAY");
@@ -70,7 +47,7 @@ function BobsCurrencyFrame:Initialize()
 	frame.ProfessionIcon1:SetVertexColor(1, 1, 1, 1);
 	frame.ProfessionIcon1:SetAlpha(0.75);
 	frame.ProfessionIcon1:ClearAllPoints();
-	frame.ProfessionIcon1:SetPoint("BOTTOMLEFT", frame.GarrisonResourceIcon, "TOPLEFT", 0, 4);
+	frame.ProfessionIcon1:SetPoint("BOTTOMLEFT", frame.OrderResourceIcon, "TOPLEFT", 0, 4);
 	frame.ProfessionIcon1:SetHeight(20);
 	frame.ProfessionIcon1:SetWidth(20);
 	frame.ProfessionIcon1:Hide();
@@ -106,17 +83,9 @@ function BobsCurrencyFrame:ApplySettings()
 end
 
 function BobsCurrencyFrame:Update()
-	local name, currentAmount, texture, earnedThisWeek, weeklyMax, totalMax, isDiscovered = GetCurrencyInfo(392);
-	frame.HonorIcon:SetTexture(texture);
-	frame.HonorLabel:SetText(currentAmount);
-	
-	name, currentAmount, texture, earnedThisWeek, weeklyMax, totalMax, isDiscovered = GetCurrencyInfo(390);
-	frame.ConquestIcon:SetTexture(texture);
-	frame.ConquestLabel:SetText(currentAmount);
-	
-	name, currentAmount, texture, earnedThisWeek, weeklyMax, totalMax, isDiscovered = GetCurrencyInfo(1220);
-	frame.GarrisonResourceIcon:SetTexture(texture);
-	frame.GarrisonResourceLabel:SetText(currentAmount);
+	local name, currentAmount, texture, earnedThisWeek, weeklyMax, totalMax, isDiscovered = GetCurrencyInfo(1220);
+	frame.OrderResourceIcon:SetTexture(texture);
+	frame.OrderResourceLabel:SetText(currentAmount);
 	
 	frame.GoldLabel:SetText(math.floor(GetMoney() / 100 / 100));
 	

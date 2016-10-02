@@ -628,7 +628,7 @@ function BobbyCode:PrintTable(table)
 		if (type(value) == "table") then
 			BobbyCode:PrintTable(value);
 		else
-			BobbyCode:Print(table[index] .. " : " .. value);
+			BobbyCode:Print(index, " : ", value);
 		end
 	end
 end
