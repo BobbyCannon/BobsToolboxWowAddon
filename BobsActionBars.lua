@@ -12,10 +12,10 @@ function BobsActionBars:Initialize()
 
 	BobsActionBars:ClearAllPoints();
 	BobsActionBars:SetPoint("BOTTOM", UIParent);
-	BobsActionBars:SetHeight(86);
-	BobsActionBars:SetWidth(1010);
+	BobsActionBars:SetHeight(1);
+	BobsActionBars:SetWidth(1);
 	--BobsActionBars:ShowBackground(true);
-	BobsActionBars:EnableMouse(true);
+	--BobsActionBars:EnableMouse(true);
 
 	BobbyCode:CreateFrame("MainBar", BobsActionBars);
 	MainBar.Buttons = {};
@@ -26,7 +26,7 @@ function BobsActionBars:Initialize()
 
 	for i = 1, 12 do
 		MainBar.Buttons[i] = _G["ActionButton" .. i];
-		MainBar.Buttons[i]:SetParent(MainBar);
+		--MainBar.Buttons[i]:SetParent(MainBar);
 		MultiBarRight.Buttons[i] = _G["MultiBarRightButton" .. i];
 		MultiBarBottomLeft.Buttons[i] = _G["MultiBarBottomLeftButton" .. i];
 		MultiBarBottomRight.Buttons[i] = _G["MultiBarBottomRightButton" .. i];
@@ -86,9 +86,9 @@ function BobsActionBars:ResizeFrames()
 	
 	-- Menu
 	CharacterMicroButton:ClearAllPoints();
-	CharacterMicroButton:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 2, 38);
-	CollectionsMicroButton:ClearAllPoints();
-	CollectionsMicroButton:SetPoint("TOP", CharacterMicroButton, "BOTTOM", 0, 22);
+	CharacterMicroButton:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 2, 2);
+	-- CollectionsMicroButton:ClearAllPoints();
+	-- CollectionsMicroButton:SetPoint("TOP", CharacterMicroButton, "BOTTOM", 0, 22);
 	
 	for _, texture in next, {
 		MainMenuBarTexture2, MainMenuBarTexture3,
@@ -114,7 +114,7 @@ function BobsActionBars:ResizeFrames()
 	
 	ArtifactWatchBar:ClearAllPoints();
 	ArtifactWatchBar:SetPoint("BOTTOMLEFT", CharacterMicroButton, "TOPLEFT", 2, -18);
-	ArtifactWatchBar:SetPoint("BOTTOMRIGHT", LFDMicroButton, "TOPRIGHT", -1, -18);
+	ArtifactWatchBar:SetPoint("BOTTOMRIGHT", MainMenuMicroButton, "TOPRIGHT", -1, -18);
 	ArtifactWatchBar.SetPoint = function() end;
 	BobsActionBars:ResizeWatchBar(ArtifactWatchBar, 14);
 	
@@ -136,32 +136,17 @@ function BobsActionBars:ResizeFrames()
 	MainMenuBarRightEndCap:SetParent(HiddenFrame)
 
 	MainBar:ClearAllPoints();
-	MainBar:SetPoint("BOTTOMLEFT", BobsActionBars, 2, 3);
+	MainBar:SetPoint("BOTTOM", BobsActionBars, 0, 4);
 	MainBar.SetPoint = function() end;
 
 	MultiBarBottomLeft:ClearAllPoints();
-	MultiBarBottomLeft:SetPoint("TOPLEFT", BobsActionBars, 2, -2);
+	MultiBarBottomLeft:SetPoint("BOTTOM", MainBar, "TOP", 0, 4);
 	MultiBarBottomLeft.SetPoint = function() end;
 		
 	MultiBarBottomRight:ClearAllPoints();
-	MultiBarBottomRight:SetPoint("TOPRIGHT", BobsActionBars, -2, -2);
+	MultiBarBottomRight:SetPoint("BOTTOM", MultiBarBottomLeft, "TOP", 0, 4);
 	MultiBarBottomRight.SetPoint = function() end;
 	
-	MultiBarRight:SetHeight(MultiBarBottomRight:GetHeight());
-	MultiBarRight:SetWidth(MultiBarBottomRight:GetWidth());
-	MultiBarRight:ClearAllPoints();
-	MultiBarRight:SetPoint("BOTTOMRIGHT", BobsActionBars, -2, 3);
-	MultiBarRight.SetPoint = function() end;
-
-	_G["MultiBarRightButton1"]:ClearAllPoints();
-	_G["MultiBarRightButton1"]:SetPoint("LEFT", MultiBarRight);
-
-	for i = 2, 12 do
-		local button = _G["MultiBarRightButton" .. i];
-		button:ClearAllPoints();
-		button:SetPoint("LEFT", _G["MultiBarRightButton" .. (i - 1)], "RIGHT", 6, 0);
-	end
-
 	MainBar:SetHeight(MultiBarBottomLeft:GetHeight());
 	MainBar:SetWidth(MultiBarBottomLeft:GetWidth());
 
@@ -176,12 +161,12 @@ function BobsActionBars:ResizeFrames()
 
 	-- Stance Bar
 	StanceBarFrame:ClearAllPoints();
-	StanceBarFrame:SetPoint("BOTTOMLEFT", MainMenuMicroButton, "BOTTOMRIGHT", -6, 0);
+	StanceBarFrame:SetPoint("BOTTOMRIGHT", CharacterBag3Slot, "BOTTOMLEFT", -16, -3);
 	StanceBarFrame.SetPoint = function() end;
 	
 	-- Possess Bar
 	PossessBarFrame:ClearAllPoints();
-	PossessBarFrame:SetPoint("BOTTOMLEFT", MainMenuMicroButton, "BOTTOMRIGHT", -6, 0);
+	PossessBarFrame:SetPoint("BOTTOMRIGHT", CharacterBag3Slot, "BOTTOMLEFT", -16, -3);
 	PossessBarFrame.SetPoint = function() end;
 
 	-- Bags
