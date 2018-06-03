@@ -1,19 +1,4 @@
 ﻿-- BobsToolbox Change Log
 -- The change log lists changes of particular note to users, not every change made.
 --
---6.0.0
---
--- Reset the addon with me coming back to the game.
---
---6.2.3.0
--- 
--- Updated rotation for Shadow Priest.
---
---7.0.0
---
--- Release for new expansion.
---
---7.0.1
---
--- Fixed minor issue with extra power bar.
--- Updated Rogue and Priest rotations.
+-- 7.3.0

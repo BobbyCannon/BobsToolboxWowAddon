@@ -15,29 +15,33 @@ function BobsUnitFrames:Initialize()
 	
 	local playerSettings = { Unit = "player", Template = "Rectangle", EnableMouse = true };
 	local player = BobsUnitButton_Create("BobsUnitFramesPlayer", UIParent, playerSettings);
-	player:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 4, 120);
+	player:SetPoint("BOTTOMLEFT", MainMenuMicroButton, "BOTTOMLEFT", 40, 4);
+	player:SetFrameLevel(100);
 	BobsUnitFrames.Player = player;
 	
 	local targetSettings = { Unit = "target", Template = "Rectangle", EnableMouse = true };
 	local target = BobsUnitButton_Create("BobsUnitFramesTarget", UIParent, targetSettings);
 	target:SetPoint("LEFT", player, "RIGHT", 6, 0);
+	target:SetFrameLevel(100);
 	BobsUnitFrames.Target = target;
 	RegisterUnitWatch(target);
 	
 	local playerHudSettings = { Unit = "player", Template = "PlayerHud" };
 	local playerHud = BobsUnitButton_Create("BobsUnitFramesPlayerHud", UIParent, playerHudSettings);
-	playerHud:SetPoint("CENTER", UIParent);
+	playerHud:SetPoint("CENTER", BobsHudFrame);
+	playerHud:SetWidth(460);
 	BobsUnitFrames.PlayerHud = playerHud;
 	
 	local targetHudSettings = { Unit = "target", Template = "TargetHud", ShowRaidIcon = true, ShowRoleIcon = true, ShowBuffIcons = true };
 	local targetHud = BobsUnitButton_Create("BobsUnitFramesTargetHud", UIParent, targetHudSettings);
-	targetHud:SetPoint("CENTER", UIParent);
+	targetHud:SetPoint("CENTER", BobsHudFrame);
+	targetHud:SetWidth(500);
 	BobsUnitFrames.TargetHud = targetHud;
 	RegisterUnitWatch(targetHud);
 	
 	local targetBadgeSettings = { Unit = "target", Template = "Badge" };
 	local targetBadge = BobsUnitButton_Create("BobsUnitFrameTargetBadge", UIParent, targetBadgeSettings);
-	targetBadge:SetPoint("TOP", targetHud, "BOTTOM", 0, -10);
+	targetBadge:SetPoint("TOP", targetHud, "BOTTOM", 0, -18);
 	BobsUnitFrames.TargetBadge = targetBadge;
 	RegisterUnitWatch(targetBadge);
 	
@@ -53,7 +57,7 @@ function BobsUnitFrames:Initialize()
 	partyFrame:SetAttribute("showPlayer", true);
 	partyFrame:SetAttribute("showRaid", true);
 	partyFrame:SetAttribute("showParty", true);
-	partyFrame:SetAttribute("showSolo", true);
+	partyFrame:SetAttribute("showSolo", false);
 	partyFrame:SetAttribute("unitsPerColumn", 5);
 	partyFrame:SetAttribute("maxColumns", 8);
 	partyFrame:SetAttribute("point", "LEFT");

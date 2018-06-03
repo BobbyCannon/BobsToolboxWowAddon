@@ -13,7 +13,7 @@ function BobsRotationFrame:Initialize()
 	BobsRotationFrame:SetWidth(116);
 	BobsRotationFrame:SetHeight(44);
 	BobsRotationFrame:ClearAllPoints();
-	BobsRotationFrame:SetPoint("BOTTOM", BobsHudFrame);
+	BobsRotationFrame:SetPoint("BOTTOM", BobsHudFrame, "BOTTOM", 0, 4);
 
 	BobsRotationFrame.Graphics = CreateFrame("Frame", nil, BobsRotationFrame);
 	BobsRotationFrame.Graphics:SetAllPoints();

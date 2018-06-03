@@ -71,6 +71,10 @@ function UnitEventHandlers:VARIABLES_LOADED()
 	BobsToolbox:ApplySettings();
 end
 
+function UnitEventHandlers:CHANNEL_UI_UPDATE()
+	BobsToolbox:ApplySettings();
+end
+
 function UnitEventHandlers:PLAYER_REGEN_ENABLED()
 	if (BobsToolbox.SettingsChanged) then
 		BobbyCode:Print("Updating settings now that we are out of combat.");

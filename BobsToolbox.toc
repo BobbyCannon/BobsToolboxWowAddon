@@ -1,13 +1,14 @@
-## Author: Bobby Cannon
-## Interface: 70000
+﻿## Author: Bobby Cannon
+## Interface: 70300
 ## Notes: The goal of BobsToolbox is to combines all the really great and needed addons into one very efficient addon.
 ## Title: BobsToolbox
-## Version: 7.0.0
+## Version: 7.3.0
 ## DefaultState: Enabled
 ## eMail: bobby.cannon@live.com
 ## LoadOnDemand: 0
 ## SavedVariablesPerCharacter: BobsToolboxSettings
 ## URL: http://www.curse.com/addons/wow/bobstoolbox
+
 Libraries\BobbyCode.xml
 BobsActionBars.lua
 BobsChatWindow.lua

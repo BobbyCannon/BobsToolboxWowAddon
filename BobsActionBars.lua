@@ -56,11 +56,6 @@ function BobsActionBars:Initialize()
 end
 
 function BobsActionBars:ApplySettings()
-	if (OrderHallCommandBar.Show) then
-		OrderHallCommandBar:Hide();
-		OrderHallCommandBar.Show = function() end; 
-	end
-	
 	MainBar.FadeLevel = 0;
 	MultiBarRight.FadeLevel = 0;
 	MultiBarBottomLeft.FadeLevel = 0;
@@ -91,26 +86,25 @@ function BobsActionBars:ResizeFrames()
 	-- CollectionsMicroButton:SetPoint("TOP", CharacterMicroButton, "BOTTOM", 0, 22);
 	
 	for _, texture in next, {
-		MainMenuBarTexture2, MainMenuBarTexture3,
-		MainMenuBarPageNumber, ActionBarUpButton, ActionBarDownButton,
-		StanceBarLeft, StanceBarMiddle, StanceBarRight } 
+		MainMenuBarTexture2, MainMenuBarTexture3, MainMenuBarPageNumber, ActionBarUpButton, ActionBarDownButton, StanceBarLeft, StanceBarMiddle, StanceBarRight, 
+		MainMenuXPBarTextureLeftCap, MainMenuXPBarTextureRightCap, MainMenuXPBarTextureMid }
 	do
 		texture:SetParent(HiddenFrame);
 		HiddenFrame:Hide();
-	end;
+	end
 
 	for _, bar in next, { MainMenuBarArtFrame, MainMenuExpBar, MainMenuBarMaxLevelBar }  
 	do
 		bar:SetWidth(0);
-	end;
+	end
 	
 	for i = 0, 1  do 
 		_G["SlidingActionBarTexture"..i]:SetParent(HiddenFrame);
-	end;	
+	end
 	
-	for i = 10, 19 do
+	for i = 1, 19 do
 		_G["MainMenuXPBarDiv"..i]:SetParent(HiddenFrame);
-	end;
+	end
 	
 	ArtifactWatchBar:ClearAllPoints();
 	ArtifactWatchBar:SetPoint("BOTTOMLEFT", CharacterMicroButton, "TOPLEFT", 2, -18);
@@ -118,6 +112,17 @@ function BobsActionBars:ResizeFrames()
 	ArtifactWatchBar.SetPoint = function() end;
 	BobsActionBars:ResizeWatchBar(ArtifactWatchBar, 14);
 	
+	MainMenuExpBar:ClearAllPoints();
+	if (ArtifactWatchBar:IsShown()) then
+		MainMenuExpBar:SetPoint("BOTTOMLEFT", ArtifactWatchBar, "TOPLEFT", 0, 2);
+		MainMenuExpBar:SetPoint("BOTTOMRIGHT", ArtifactWatchBar, "TOPRIGHT", 0, 2);
+	else
+		MainMenuExpBar:SetPoint("BOTTOMLEFT", CharacterMicroButton, "TOPLEFT", 2, -18);
+		MainMenuExpBar:SetPoint("BOTTOMRIGHT", MainMenuMicroButton, "TOPRIGHT", -1, -18);
+	end
+	MainMenuExpBar.SetPoint = function() end;
+	BobsActionBars:ResizeWatchBar(MainMenuExpBar, 14);
+		
 	HonorWatchBar:ClearAllPoints();
 	HonorWatchBar:SetPoint("BOTTOMLEFT", ArtifactWatchBar, "TOPLEFT", 0, 4);
 	HonorWatchBar:SetPoint("BOTTOMRIGHT", ArtifactWatchBar, "TOPRIGHT", 0, 4);
@@ -134,6 +139,9 @@ function BobsActionBars:ResizeFrames()
 	MainMenuBarTexture1:SetParent(HiddenFrame)
 	MainMenuBarLeftEndCap:SetParent(HiddenFrame)
 	MainMenuBarRightEndCap:SetParent(HiddenFrame)
+	MainMenuBarExpText:ClearAllPoints();
+	MainMenuBarExpText:SetPoint("TOP", MainMenuExpBar, "TOP", 0, -1);
+	MainMenuBarExpText.SetPoint = function() end;
 
 	MainBar:ClearAllPoints();
 	MainBar:SetPoint("BOTTOM", BobsActionBars, 0, 4);
@@ -180,50 +188,54 @@ function BobsActionBars:ResizeFrames()
 	
 	MainMenuBarBackpackButton:ClearAllPoints();
 	MainMenuBarBackpackButton:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -2, 2);
+	
+	-- Casting Bar
+	CastingBarFrame:ClearAllPoints()
+	CastingBarFrame:SetPoint("TOP", BobsHudFrame, "BOTTOM", 0, 2)
+	CastingBarFrame.SetPoint = function() end;
 end
 
 function BobsActionBars:ResizeWatchBar(bar)
 	bar:SetHeight(12);
-	bar.StatusBar:SetAllPoints(bar);
-	bar.StatusBar.SetAllPoints = function() end;
-	bar.StatusBar.SetPoint = function() end;
-	bar.StatusBar.WatchBarTexture0:SetAlpha(0);
-	bar.StatusBar.WatchBarTexture1:SetAlpha(0);
-	bar.StatusBar.WatchBarTexture2:SetAlpha(0);
-	bar.StatusBar.WatchBarTexture3:SetAlpha(0);
-	bar.StatusBar.XPBarTexture0:SetAlpha(0);
-	bar.StatusBar.XPBarTexture1:SetAlpha(0);
-	bar.StatusBar.XPBarTexture2:SetAlpha(0);
-	bar.StatusBar.XPBarTexture3:SetAlpha(0);
-	bar.OverlayFrame:ClearAllPoints();
-	bar.OverlayFrame:SetAllPoints(bar);
-	bar.OverlayFrame.SetAllPoints = function() end;
-	bar.OverlayFrame.SetPoint = function() end;
-	bar.OverlayFrame:Show();
-	bar.OverlayFrame.Text:ClearAllPoints();
-	bar.OverlayFrame.Text:SetAllPoints(bar.OverlayFrame);
-	bar.OverlayFrame.Text.SetAllPoints = function() end;
-	bar.OverlayFrame.Text.SetPoint = function() end;
-	bar.OverlayFrame.Text:Show();
+	
+	if (bar.StatusBar) then
+		bar.StatusBar:SetAllPoints(bar);
+		bar.StatusBar.SetAllPoints = function() end;
+		bar.StatusBar.SetPoint = function() end;
+		bar.StatusBar.WatchBarTexture0:SetAlpha(0);
+		bar.StatusBar.WatchBarTexture1:SetAlpha(0);
+		bar.StatusBar.WatchBarTexture2:SetAlpha(0);
+		bar.StatusBar.WatchBarTexture3:SetAlpha(0);
+		bar.StatusBar.XPBarTexture0:SetAlpha(0);
+		bar.StatusBar.XPBarTexture1:SetAlpha(0);
+		bar.StatusBar.XPBarTexture2:SetAlpha(0);
+		bar.StatusBar.XPBarTexture3:SetAlpha(0);
+	end
+	
+	if (bar.OverlayFrame) then
+		bar.OverlayFrame:ClearAllPoints();
+		bar.OverlayFrame:SetAllPoints(bar);
+		bar.OverlayFrame.SetAllPoints = function() end;
+		bar.OverlayFrame.SetPoint = function() end;
+		bar.OverlayFrame:Show();
+		bar.OverlayFrame.Text:ClearAllPoints();
+		bar.OverlayFrame.Text:SetAllPoints(bar.OverlayFrame);
+		bar.OverlayFrame.Text.SetAllPoints = function() end;
+		bar.OverlayFrame.Text.SetPoint = function() end;
+		bar.OverlayFrame.Text:Show();
+	end
 end
 
 function BobsActionBars:SetupHiddenBar(bar, hide)
-	bar.OldOnEnter = bar:GetScript("OnEnter");
-	bar:SetScript("OnEnter", function(self)
+	bar:HookScript("OnEnter", function(self)
 		BobbyCode:Unfade(self);
-		if (bar.OldOnEnter) then		
-			bar:OldOnEnter(self);
-		end
+		BobbyCode:DebugPrint("h1");
 	end);
 end
 
 function BobsActionBars:SetupHiddenFrameButton(frame, button, hide)
-	button.OldOnEnter = button:GetScript("OnEnter");
-	button:SetScript("OnEnter", function(self)
+	button:HookScript("OnEnter", function(self)
 		BobbyCode:Unfade(frame);
-		if (button.OldOnEnter) then
-			button:OldOnEnter(self);
-		end
 	end);
 end
 

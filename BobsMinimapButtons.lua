@@ -13,7 +13,7 @@ function BobsMinimapButtons:Initialize()
 	BobsMinimapButtons:SetWidth(488);
 
 	BobsMinimapButtons:ClearAllPoints();
-	BobsMinimapButtons:SetPoint("TOPLEFT", UIParent);
+	BobsMinimapButtons:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, -4);
 	
 	BobsToolbox:RegisterTask("BobsMinimapButtons", BobsMinimapButtons.Timer, 2);
 	BobsMinimapButtons:ShowBackground(false);
@@ -21,6 +21,13 @@ function BobsMinimapButtons:Initialize()
 end
 
 function BobsMinimapButtons:ApplySettings()
+	BobsMinimapButtons:ClearAllPoints();
+	
+	if (OrderHallCommandBar) and (OrderHallCommandBar:IsShown()) then
+		BobsMinimapButtons:SetPoint("BOTTOMLEFT", OrderHallCommandBar, "TOPLEFT", 0, -64);
+	else
+		BobsMinimapButtons:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, -4);
+	end
 end
 
 function BobsMinimapButtons:OrganizeButtons()

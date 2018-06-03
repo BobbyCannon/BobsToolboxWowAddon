@@ -11,12 +11,12 @@ BobsUnitButtonPlayerHudTemplate = {
 		header:CallMethod('InitializeButton', self:GetName());
 				
 		-- Set width and height;
-		self:SetWidth(292);
-		self:SetHeight(190);
+		self:SetWidth(145);
+		self:SetHeight(300);
 	]],
 	Name = "PlayerHud",
-	Width = 292,
-	Height = 190,
+	Width = 145,
+	Height = 300,
 }
 
 function BobsUnitButtonPlayerHudTemplate:Layout(button)
@@ -41,7 +41,7 @@ function BobsUnitButtonPlayerHudTemplate:Layout(button)
 	Graphics.Background:SetBackdrop({bgFile = BobbyCode.Texture.RoundBarLeft});
 	Graphics.Background:ClearAllPoints();
 	Graphics.Background:SetPoint("LEFT", button, -45, 0);
-	Graphics.Background:SetWidth(96);
+	Graphics.Background:SetWidth(button.Width);
 	Graphics.Background:SetHeight(button.Height);
 	Graphics.Background:Show();
 
@@ -50,7 +50,7 @@ function BobsUnitButtonPlayerHudTemplate:Layout(button)
 	Graphics.Health:SetOrientation("VERTICAL");
 	Graphics.Health:ClearAllPoints();
 	Graphics.Health:SetAllPoints(Graphics.Background);
-	Graphics.Health:SetWidth(96);
+	Graphics.Health:SetWidth(button.Width);
 	Graphics.Health:SetHeight(button.Height);
 	Graphics.Health:Show();
 
@@ -67,7 +67,7 @@ function BobsUnitButtonPlayerHudTemplate:Layout(button)
 	Graphics.Power:SetOrientation("VERTICAL");
 	Graphics.Power:ClearAllPoints();
 	Graphics.Power:SetPoint("RIGHT", button, 45, 0);
-	Graphics.Power:SetWidth(96);
+	Graphics.Power:SetWidth(button.Width);
 	Graphics.Power:SetHeight(button.Height);
 	Graphics.Power:Show();
 

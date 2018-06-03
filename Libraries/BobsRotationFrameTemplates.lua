@@ -1,10 +1,10 @@
-﻿-- Author      : bobby.cannon
--- Create Date : 1/15/2012 7:30:43 PM
+﻿-- Author		:	bobby.cannon
+-- Create Date	:	1/15/2012 7:30:43 PM
 
 BobsRotationPriestTemplate = {};
 
 function BobsRotationPriestTemplate:CheckCast(spellName)
-	local hasDevouringPlague = BobsRotationFrame:CheckForTargetDebuff("Devouring Plague") > 0;
+	local hasDevouringPlague = BobsRotationFrame:CheckForTargetDebuff("Devouring Plague");
 
 	if (hasDevouringPlague and (spellName == "Mind Spike")) then
 		PlaySoundFile("Sound\\Creature\\Peon\\PeonPissed1.wav");
@@ -17,10 +17,11 @@ function BobsRotationPriestTemplate:GetNextSpell(skipSpell)
 	end
 	
 	local globalCooldown = BobsRotationFrame:GetGlobalCooldown();
+	
 	if (skipSpell == nil) then
 		globalCooldown = globalCooldown / 2;
 	end
-
+	
 	return BobsRotationPriestTemplate:Process(skipSpell, globalCooldown);
 end
 
@@ -31,17 +32,18 @@ function BobsRotationPriestTemplate:Process(skipSpell, globalCooldown)
 	
 	if (BobsRotationFrame:CheckDebuff("Shadow Word: Pain", skipSpell, globalCooldown * 2)) then
 		return "Shadow Word: Pain";
-    end
+	end
 
-    if (BobsRotationFrame:CheckDebuff("Vampiric Touch", skipSpell, 4)) then
-   		return "Vampiric Touch";
-    end
+	if (BobsRotationFrame:CheckDebuff("Vampiric Touch", skipSpell, 4)) then
+		return "Vampiric Touch";
+	end
 	
 	if (BobsRotationFrame:SpellIsReady("Shadow Word: Death", skipSpell, globalCooldown)) then
-        local healthLeft = UnitHealth("target") / UnitHealthMax("target");
-        if (healthLeft <= 0.25) then
-            return "Shadow Word: Death";
-        end
+		local healthLeft = UnitHealth("target") / UnitHealthMax("target");
+		
+		if (healthLeft <= 0.25) then
+			return "Shadow Word: Death";
+		end
 	end
 	
 	if (BobsRotationFrame:SpellIsReady("Mind Blast", skipSpell, globalCooldown)) then
@@ -55,16 +57,18 @@ function BobsRotationPriestTemplate:ProcessAsNormal(skipSpell, globalCooldown)
 
 	if (BobsRotationFrame:SpellIsReady("Devouring Plague", skipSpell, globalCooldown)) then
 		local orbs = UnitPower("player", SPELL_POWER_SHADOW_ORBS);
+		
 		if (orbs >= 3) then
 			return "Devouring Plague";
 		end
 	end
 
 	if (BobsRotationFrame:SpellIsReady("Shadow Word: Death", skipSpell, globalCooldown)) then
-        local healthLeft = UnitHealth("target") / UnitHealthMax("target");
-        if (healthLeft <= 0.25) then
-            return "Shadow Word: Death";
-        end
+		local healthLeft = UnitHealth("target") / UnitHealthMax("target");
+		
+		if (healthLeft <= 0.25) then
+			return "Shadow Word: Death";
+		end
 	end
 		
 	if (BobsRotationFrame:SpellIsReady("Mind Blast", skipSpell, globalCooldown)) then
@@ -79,7 +83,7 @@ function BobsRotationPriestTemplate:GetExtraSpell()
 	
 	if (BobsRotationFrame:CheckBuff("Power Word: Fortitude", nil, globalCooldown)) then
 		return "Power Word: Fortitude";
-    end
+	end
 	
 	if (BobsRotationFrame:SpellIsReady("Halo", nil, globalCooldown)) then
 		return "Halo";
@@ -164,6 +168,10 @@ function BobsRotationRogueTemplate:GetExtraSpell()
 
 	if (BobsRotationFrame:SpellIsReady("Vendetta", nil, globalCooldown)) then
 		return "Vendetta";
+	end
+	
+	if (BobsRotationFrame:SpellIsReady("Marked for Death", nil, globalCooldown)) then
+		return "Marked for Death";
 	end
 
 	if (BobsRotationFrame:SpellIsReady("Kingsbane", skipSpell, globalCooldown)) then

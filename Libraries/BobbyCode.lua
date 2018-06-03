@@ -96,8 +96,8 @@ function BobbyCode:CreateBuffButton(name, parent, id, unit, filter)
     local frame = CreateFrame("Button", name, parent);
 	frame:SetFrameLevel(parent:GetFrameLevel() + 1);
     frame:SetFrameStrata("BACKGROUND");
-    frame:SetWidth(20);
-    frame:SetHeight(20);
+    frame:SetWidth(26);
+    frame:SetHeight(26);
 
 	if (id ~= nil) then
 		frame:SetID(id);
@@ -124,10 +124,12 @@ function BobbyCode:CreateBuffButton(name, parent, id, unit, filter)
 	frame.Icon = frame:CreateTexture(name .. "Icon", "BACKGROUND");
 	frame.Icon:SetAllPoints(frame);
 	
-    frame.Count = frame:CreateFontString(name .. "Count", "ARTWORK", "NumberFontNormalSmall");
+    frame.Count = frame:CreateFontString(name .. "Count", "ARTWORK", "GameFontDisableSmall");
+    frame.Count:SetFontObject("GameFontRedSmall")
     frame.Count:SetPoint("BOTTOMRIGHT", 3, 0);
     
-    frame.Duration = frame:CreateFontString(name .. "Duration", "ARTWORK", "GameFontNormalSmall");
+    frame.Duration = frame:CreateFontString(name .. "Duration", "ARTWORK", "GameFontDisableSmall");
+    frame.Duration:SetFontObject("GameFontRedSmall")
     frame.Duration:SetPoint("TOP", frame, "BOTTOM");
     
     frame.Cooldown = CreateFrame("Cooldown", name .. "Cooldown", frame, "CooldownFrameTemplate");

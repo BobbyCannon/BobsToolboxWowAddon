@@ -7,9 +7,9 @@ local UnitEventHandlers = {};
 local timerInterval = 1/20;
 
 function BobsHudFrame:Initialize()
-	BobsHudFrame:SetWidth(260);
-	BobsHudFrame:SetHeight(200);
-	BobsHudFrame:SetPoint("CENTER");
+	BobsHudFrame:SetWidth(360);
+	BobsHudFrame:SetHeight(320);
+	BobsHudFrame:SetPoint("CENTER", UIParent, "CENTER", 0, -45);
 	BobsHudFrame:EnableMouse(false);
 	BobsHudFrame.FadeOut = 1;
 

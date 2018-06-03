@@ -60,10 +60,10 @@ function BobsChatWindow:MoveStuff()
 	ChatFrame1:ClearAllPoints();
 	ChatFrame1:SetPoint("BOTTOMLEFT", 10, 160);
 	
-	FriendsMicroButton:ClearAllPoints();
-	FriendsMicroButton:SetPoint("BOTTOMLEFT", ChatFrame1, "TOPLEFT", -10, 4);
-	BobbyCode:EnableMouseFadeFrame(FriendsMicroButton);
-	FriendsMicroButton:SetFrameLevel(ChatFrame1Tab:GetFrameLevel() + 1);
+	QuickJoinToastButton:ClearAllPoints();
+	QuickJoinToastButton:SetPoint("BOTTOMLEFT", ChatFrame1, "TOPLEFT", -10, 20);
+	BobbyCode:EnableMouseFadeFrame(QuickJoinToastButton);
+	QuickJoinToastButton:SetFrameLevel(ChatFrame1Tab:GetFrameLevel() + 1);
 	
 	for _,name in ipairs(CHAT_FRAMES) do 
 		local frame = _G[name];
