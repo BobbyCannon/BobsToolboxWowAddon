@@ -11,7 +11,7 @@ function BobsCurrencyFrame:Initialize()
 	frame:SetWidth(150);
 	frame:ShowBackground(false);
 	frame:ClearAllPoints();
-	frame:SetPoint("BOTTOMRIGHT", UIParent, 0, 38);
+	frame:SetPoint("BOTTOMRIGHT", UIParent, 0, 100);
 	
 	frame.GoldIcon = frame:CreateTexture();
 	frame.GoldIcon:SetDrawLayer("OVERLAY");
@@ -119,7 +119,6 @@ function BobsCurrencyFrame:Update()
 end
 
 UnitEventHandlers.CURRENCY_DISPLAY_UPDATE = BobsCurrencyFrame.Update;
-UnitEventHandlers.HONOR_CURRENCY_UPDATE = BobsCurrencyFrame.Update;
 UnitEventHandlers.TRADE_CURRENCY_CHANGED = BobsCurrencyFrame.Update;
 UnitEventHandlers.TRADE_MONEY_CHANGED = BobsCurrencyFrame.Update;
 UnitEventHandlers.PLAYER_TRADE_MONEY = BobsCurrencyFrame.Update;

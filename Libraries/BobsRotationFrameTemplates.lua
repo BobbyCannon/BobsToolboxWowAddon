@@ -137,6 +137,10 @@ function BobsRotationRogueTemplate:GetNextSpellForAssassination(skipSpell)
 		return "Exsanguinate";
 	end
 	
+	if (BobsRotationFrame:CheckForTargetDebuff("Garrote") and BobsRotationFrame:SpellIsReady("Toxic Blade", skipSpell, globalCooldown)) then
+		return "Toxic Blade";
+	end
+
 	if (BobsRotationFrame:SpellIsReady("Envenom", skipSpell, globalCooldown) and (comboPoints >= 5)) then
 		return "Envenom";
 	end

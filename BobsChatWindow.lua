@@ -105,10 +105,11 @@ function BobsChatWindow:HideStuff()
 		_G[name.."EditBox"]:Hide();
 
 		BobbyCode:DisableFrame(_G["ChatFrameMenuButton"]);
-		BobbyCode:DisableFrame(_G[name.."ButtonFrameUpButton"]);
-		BobbyCode:DisableFrame(_G[name.."ButtonFrameDownButton"]);
-		BobbyCode:DisableFrame(_G[name.."ButtonFrameBottomButton"]);
-		BobbyCode:DisableFrame(_G[name.."ButtonFrameMinimizeButton"]);
+		BobbyCode:EnableMouseFadeFrame(_G["ChatFrameChannelButton"]);
+		--BobbyCode:DisableFrame(_G[name.."ButtonFrameUpButton"]);
+		--BobbyCode:DisableFrame(_G[name.."ButtonFrameDownButton"]);
+		--BobbyCode:DisableFrame(_G[name.."ButtonFrameBottomButton"]);
+		--BobbyCode:DisableFrame(_G[name.."ButtonFrameMinimizeButton"]);
 
 		if (_G[name.."Tab"].conversationIcon) then 
 			BobbyCode:DisableFrame(_G[name.."Tab"].conversationIcon);

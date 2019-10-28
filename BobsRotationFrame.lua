@@ -191,7 +191,7 @@ function BobsRotationFrame:GetGlobalCooldown()
 end
 
 function BobsRotationFrame:CheckForBuff(name)
-	local dbName, _, _, count = UnitAura("player", name, nil, "PLAYER|HELPFUL");
+	local dbName, icon, count = AuraUtil.FindAuraByName(name, "player", "PLAYER|HELPFUL");
 
 	if (dbName ~= name ) then
 		return 0;
@@ -203,7 +203,7 @@ function BobsRotationFrame:CheckForBuff(name)
 end
 
 function BobsRotationFrame:CheckForPlayerDebuff(name)
-	local dbName, _, _, count = UnitAura("player", name, nil, "PLAYER|HARMFUL");
+	local dbName, icon, count = AuraUtil.FindAuraByName(name, "player", "PLAYER|HARMFUL");
 
 	if (dbName ~= name) then
 		return 0;
@@ -215,8 +215,8 @@ function BobsRotationFrame:CheckForPlayerDebuff(name)
 end
 
 function BobsRotationFrame:CheckForTargetDebuff(name)
-	local dbName, _, _, count = UnitAura("target", name, nil, "PLAYER|HARMFUL");
-
+	local dbName, icon, count = AuraUtil.FindAuraByName(name, "target", "PLAYER|HARMFUL");
+	
 	if (dbName ~= name) then
 		return false;
 	elseif (dbName == name) and (count == 0) then
@@ -237,7 +237,7 @@ function BobsRotationFrame:CheckBuff(name, skipSpell, threshold)
 	end
 
 	-- Get the buff off the player.
-	local name, _, _, count, _, _, expirationTime = UnitAura("player", name, nil, "PLAYER|HELPFUL");
+	local name, icon, count, debuffType, duration, expirationTime = AuraUtil.FindAuraByName(name, "player", "PLAYER|HELPFUL");
 	if (name == nil) then
 		-- The buff is missing so we need it.
 		return true;
@@ -263,10 +263,10 @@ function BobsRotationFrame:CheckDebuff(name, skipSpell, threshold)
 	end
 
 	-- Get the debuff of the target.
-	local dbName, _, _, count, _, _, expirationTime = UnitAura("target", name, nil, "PLAYER|HARMFUL");
+	local name, icon, count, debuffType, duration, expirationTime = AuraUtil.FindAuraByName(name, "target", "PLAYER|HARMFUL");
 
 	-- Check to see if the debuff is there.
-	if (dbName == nil) then
+	if (name == nil) then
 		-- The debuff is missing so return it.
 		return true;
 	end

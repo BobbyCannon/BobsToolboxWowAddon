@@ -92,14 +92,13 @@ function BobsExtraPowerFrame:OnEvent(event, ...)
 	UnitEventHandlers[event](self, ...) 
 end
 
-function UnitEventHandlers.UNIT_POWER()
+function UnitEventHandlers.UNIT_POWER_UPDATE()
 	BobsExtraPowerFrame:UpdateExtraPower();
 end
 
-UnitEventHandlers.UNIT_AURA = UnitEventHandlers.UNIT_POWER;
-UnitEventHandlers.UNIT_COMBO_POINTS = UnitEventHandlers.UNIT_POWER;
-UnitEventHandlers.PLAYER_TARGET_CHANGED = UnitEventHandlers.UNIT_POWER;
-UnitEventHandlers.PLAYER_REGEN_DISABLED = UnitEventHandlers.UNIT_POWER;
-UnitEventHandlers.PLAYER_REGEN_ENABLED = UnitEventHandlers.UNIT_POWER;
+UnitEventHandlers.UNIT_AURA = UnitEventHandlers.UNIT_POWER_UPDATE;
+UnitEventHandlers.PLAYER_TARGET_CHANGED = UnitEventHandlers.UNIT_POWER_UPDATE;
+UnitEventHandlers.PLAYER_REGEN_DISABLED = UnitEventHandlers.UNIT_POWER_UPDATE;
+UnitEventHandlers.PLAYER_REGEN_ENABLED = UnitEventHandlers.UNIT_POWER_UPDATE;
 
 BobsExtraPowerFrame:SetScript("OnEvent", BobsExtraPowerFrame.OnEvent);

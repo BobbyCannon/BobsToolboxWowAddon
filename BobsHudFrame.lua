@@ -3,7 +3,7 @@
 
 BobsHudFrame = BobbyCode:CreateFrame("BobsHudFrame", UIParent);
 
-local UnitEventHandlers = {};
+local BobsHudFrameEventHandlers = {};
 local timerInterval = 1/20;
 
 function BobsHudFrame:Initialize()
@@ -13,7 +13,7 @@ function BobsHudFrame:Initialize()
 	BobsHudFrame:EnableMouse(false);
 	BobsHudFrame.FadeOut = 1;
 
-	for eventname, _ in pairs(UnitEventHandlers) do 
+	for eventname, _ in pairs(BobsHudFrameEventHandlers) do 
 		BobsHudFrame:RegisterEvent(eventname);
 	end
 end
@@ -22,7 +22,7 @@ function BobsHudFrame:ApplySettings()
 end
 
 function BobsHudFrame:OnEvent(event, ...)
-	UnitEventHandlers[event](self, ...) 
+	BobsHudFrameEventHandlers[event](self, ...) 
 end
 
 BobsHudFrame:SetScript("OnEvent", BobsHudFrame.OnEvent);

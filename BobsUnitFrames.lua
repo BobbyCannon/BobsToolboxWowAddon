@@ -2,14 +2,11 @@
 -- Create Date : 9/23/2012 12:36:04 PM
 
 BobsUnitFrames = {};
-local UnitEventHandlers = {};
 local TexturePath = "Interface\\AddOns\\BobsToolbox\\Textures\\";
 local frameHeight = 28;
 local iconHeight = 24;
 	
 function BobsUnitFrames:Initialize()
-	BobbyCode:HideBlizzardPlayerFrame();
-	BobbyCode:HideBlizzardTargetFrame();
 	BobbyCode:HideBlizzardPartyFrame();
 	BobbyCode:HideBlizzardRaidFrame();
 	
@@ -72,7 +69,8 @@ function BobsUnitFrames:Initialize()
 end
 
 function BobsUnitFrames:ApplySettings()
-	
+	BobbyCode:HideBlizzardPlayerFrame();
+	BobbyCode:HideBlizzardTargetFrame();
 end
 
 function BobsUnitFrames_InitializeButton(self, buttonName)

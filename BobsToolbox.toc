@@ -1,8 +1,8 @@
 ﻿## Author: Bobby Cannon
-## Interface: 70300
+## Interface: 80205
 ## Notes: The goal of BobsToolbox is to combines all the really great and needed addons into one very efficient addon.
 ## Title: BobsToolbox
-## Version: 7.3.0
+## Version: 8.0.0
 ## DefaultState: Enabled
 ## eMail: bobby.cannon@live.com
 ## LoadOnDemand: 0

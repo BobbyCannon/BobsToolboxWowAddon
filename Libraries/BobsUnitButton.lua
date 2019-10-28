@@ -3,7 +3,7 @@
 
 ClickCastFrames = ClickCastFrames or {}
 
-local UnitEventHandlers = {};
+local BobsUnitButtonEventHandlers = {};
 local TrackedAuras = {};
 local Templates = {
 	BobsUnitButtonBadgeTemplate,
@@ -132,7 +132,7 @@ function BobsUnitButton_Initialize(button, settings)
 	button:SetScript("OnAttributeChanged", BobsUnitButton_OnAttributeChanged);
 	
 	-- Register all the events.
-	for eventname, _ in pairs(UnitEventHandlers) do 
+	for eventname, _ in pairs(BobsUnitButtonEventHandlers) do
 		button:RegisterEvent(eventname);
 	end	
 	
@@ -207,10 +207,10 @@ end
 --
 function BobsUnitButton_OnEvent(button, event, ...)
 	-- Run the event handler.
-	UnitEventHandlers[event](button, ...) 
+	BobsUnitButtonEventHandlers[event](button, ...) 
 end
 
-function UnitEventHandlers.UNIT_HEALTH(button, unit)
+function BobsUnitButtonEventHandlers.UNIT_HEALTH(button, unit)
 	-- Make sure the unit is valid.
 	if (button.Unit ~= unit) then
 		return;
@@ -221,10 +221,10 @@ function UnitEventHandlers.UNIT_HEALTH(button, unit)
 	BobsUnitButton_UpdateName(button);
 end
 
-UnitEventHandlers.UNIT_MAXHEALTH = UnitEventHandlers.UNIT_HEALTH;
-UnitEventHandlers.UNIT_HEAL_PREDICTION = UnitEventHandlers.UNIT_HEALTH;
+BobsUnitButtonEventHandlers.UNIT_MAXHEALTH = BobsUnitButtonEventHandlers.UNIT_HEALTH;
+BobsUnitButtonEventHandlers.UNIT_HEAL_PREDICTION = BobsUnitButtonEventHandlers.UNIT_HEALTH;
 
-function UnitEventHandlers.UNIT_POWER(button, unit)
+function BobsUnitButtonEventHandlers.UNIT_POWER_UPDATE(button, unit)
 	-- Make sure the unit is valid.
 	if (button.Unit ~= unit) then
 		return;
@@ -234,10 +234,10 @@ function UnitEventHandlers.UNIT_POWER(button, unit)
 	BobsUnitButton_UpdatePower(button);
 end
 
-UnitEventHandlers.UNIT_MAXPOWER = UnitEventHandlers.UNIT_POWER;
-UnitEventHandlers.UNIT_DISPLAYPOWER = UnitEventHandlers.UNIT_POWER;
+BobsUnitButtonEventHandlers.UNIT_MAXPOWER = BobsUnitButtonEventHandlers.UNIT_POWER_UPDATE;
+BobsUnitButtonEventHandlers.UNIT_DISPLAYPOWER = BobsUnitButtonEventHandlers.UNIT_POWER_UPDATE;
 
-function UnitEventHandlers.PLAYER_TARGET_CHANGED(button)
+function BobsUnitButtonEventHandlers.PLAYER_TARGET_CHANGED(button)
 	-- Check to see if the unit is the target.
 	if (button.Unit == "target") then
 		-- We need full update because this is a target frame.
@@ -248,7 +248,7 @@ function UnitEventHandlers.PLAYER_TARGET_CHANGED(button)
 	end
 end
 
-function UnitEventHandlers.UNIT_NAME_UPDATE(button, unit)
+function BobsUnitButtonEventHandlers.UNIT_NAME_UPDATE(button, unit)
 	-- Make sure the unit is valid.
 	if (button.Unit ~= unit) then
 		return;
@@ -258,10 +258,10 @@ function UnitEventHandlers.UNIT_NAME_UPDATE(button, unit)
 	BobsUnitButton_UpdateName(button);
 end
 
-UnitEventHandlers.UNIT_LEVEL = UnitEventHandlers.UNIT_NAME_UPDATE;
-UnitEventHandlers.UNIT_CLASSIFICATION_CHANGED = UnitEventHandlers.UNIT_NAME_UPDATE;
+BobsUnitButtonEventHandlers.UNIT_LEVEL = BobsUnitButtonEventHandlers.UNIT_NAME_UPDATE;
+BobsUnitButtonEventHandlers.UNIT_CLASSIFICATION_CHANGED = BobsUnitButtonEventHandlers.UNIT_NAME_UPDATE;
 
-function UnitEventHandlers.UNIT_PHASE(button, unit)
+function BobsUnitButtonEventHandlers.UNIT_PHASE(button, unit)
 	-- Make sure the unit is valid.
 	if (button.Unit ~= unit) then
 		return;
@@ -271,17 +271,17 @@ function UnitEventHandlers.UNIT_PHASE(button, unit)
 	BobsUnitButton_UpdatePhased(button);
 end
 
-UnitEventHandlers.PARTY_MEMBER_ENABLE = UnitEventHandlers.UNIT_PHASE;
-UnitEventHandlers.PARTY_MEMBER_DISABLE = UnitEventHandlers.UNIT_PHASE;
+BobsUnitButtonEventHandlers.PARTY_MEMBER_ENABLE = BobsUnitButtonEventHandlers.UNIT_PHASE;
+BobsUnitButtonEventHandlers.PARTY_MEMBER_DISABLE = BobsUnitButtonEventHandlers.UNIT_PHASE;
 
-function UnitEventHandlers.RAID_TARGET_UPDATE(button)
+function BobsUnitButtonEventHandlers.RAID_TARGET_UPDATE(button)
 	-- Update the unit's icon.
 	BobsUnitButton_UpdateIcon(button);
 end
 
-UnitEventHandlers.ROLE_CHANGED_INFORM = UnitEventHandlers.RAID_TARGET_UPDATE;
+BobsUnitButtonEventHandlers.ROLE_CHANGED_INFORM = BobsUnitButtonEventHandlers.RAID_TARGET_UPDATE;
 
-function UnitEventHandlers.UNIT_THREAT_SITUATION_UPDATE(button, unit)
+function BobsUnitButtonEventHandlers.UNIT_THREAT_SITUATION_UPDATE(button, unit)
 	-- Make sure the unit is valid.
 	if (button.Unit ~= unit) then
 		return;
@@ -291,7 +291,7 @@ function UnitEventHandlers.UNIT_THREAT_SITUATION_UPDATE(button, unit)
 	BobsUnitButton_UpdateThreat(button);
 end
 
-function UnitEventHandlers.UNIT_AURA(button, unit)
+function BobsUnitButtonEventHandlers.UNIT_AURA(button, unit)
 	-- Make sure the unit is valid.
 	if (button.Unit ~= unit) then
 		return;
@@ -301,7 +301,7 @@ function UnitEventHandlers.UNIT_AURA(button, unit)
 	BobsUnitButton_UpdateAuras(button);
 end
 
-function UnitEventHandlers.UNIT_CONNECTION(button, unit, hasConnected)
+function BobsUnitButtonEventHandlers.UNIT_CONNECTION(button, unit, hasConnected)
 	-- Make sure the unit is valid.
 	if (button.Unit ~= unit) then
 		return;

@@ -765,23 +765,29 @@ function BobbyCode:GetPlayerRangeSpells()
 end
 
 function BobbyCode:HideBlizzardPlayerFrame()
-	PlayerFrame:UnregisterAllEvents()
-	PlayerFrameHealthBar:UnregisterAllEvents()
-	PlayerFrameManaBar:UnregisterAllEvents()
-	PlayerFrame:Hide()
-	PlayerFrame.Show = function() end;
+	--PlayerFrame:UnregisterAllEvents()
+	--PlayerFrameHealthBar:UnregisterAllEvents()
+	--PlayerFrameManaBar:UnregisterAllEvents()
+	--PlayerFrame:Hide()
+	--PlayerFrame.Show = function() end;
+	
+	PlayerFrame:ClearAllPoints();
+	PlayerFrame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", -24, -46);
 end
 
 function BobbyCode:HideBlizzardTargetFrame()
-	TargetFrame:UnregisterAllEvents()
-	TargetFrameHealthBar:UnregisterAllEvents()
-	TargetFrameManaBar:UnregisterAllEvents()
-	TargetFrame:Hide()
-	TargetFrame.Show = function() end;
+	--TargetFrame:UnregisterAllEvents()
+	--TargetFrameHealthBar:UnregisterAllEvents()
+	--TargetFrameManaBar:UnregisterAllEvents()
+	--TargetFrame:Hide()
+	--TargetFrame.Show = function() end;
 
-	ComboFrame:UnregisterAllEvents();
-	ComboFrame:Hide();
-	ComboFrame.Show = function() end;
+	--ComboFrame:UnregisterAllEvents();
+	--ComboFrame:Hide();
+	--ComboFrame.Show = function() end;
+
+	TargetFrame:ClearAllPoints();
+	TargetFrame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 230, -46);
 end
 
 function BobbyCode:HideBlizzardPartyFrame()
@@ -837,7 +843,7 @@ end
 
 function BobbyCode:UpdateBuffsBase(buffFunction, unit, buttonArray, namePrefix, parent)
 	local index = 1;
-	local name, rank, icon, count, debuffType, duration, expirationTime = buffFunction(unit, index);
+	local name, icon, count, debuffType, duration, expirationTime = buffFunction(unit, index);
     local filter = BobbyCode:Select(buffFunction == UnitBuff, "HELP", "HARMFUL");
 		
 	while icon do
@@ -868,7 +874,7 @@ function BobbyCode:UpdateBuffsBase(buffFunction, unit, buttonArray, namePrefix, 
                     
 		-- Update the index, get the next buff.
         index = index + 1;
-        name, rank, icon, count, debuffType, duration, expirationTime = buffFunction(unit, index);
+        name, icon, count, debuffType, duration, expirationTime = buffFunction(unit, index);
     end
 
 	-- Return the amount of buffs found.

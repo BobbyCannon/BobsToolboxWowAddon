@@ -18,20 +18,20 @@ BobsToolbox.SettingsChanged = false;
 BobsToolbox.MinimapIconShown = false;
 BobsToolbox.Description = "Email comments, suggestions and bug reports to bobby.cannon@live.com.\n\nPlease include " ..
 	"the version number [" .. addonName .. " v" .. version .. "] and a detailed description of the issue with any " ..
-	"bug logs.\n\nVisit the addon website at http://wow.curse.com/downloads/wow-addons/details/bobstoolbox.aspx." ..
+	"bug logs.\n\nVisit the addon website at https://www.curseforge.com/wow/addons/bobstoolbox." ..
 	"\n\nOptional Addons: Clique\n\n";
 
 BobsToolbox.Tasks = {};
 BobsToolbox.OptionFrames = {};
 BobsToolbox.Tools = {
-	BobsActionBars, 
-	BobsChatWindow, 
+	BobsActionBars,
+	BobsChatWindow,
 	BobsCooldownFrame,
 	BobsCurrencyFrame,
-	BobsExtraPowerFrame, 
-	BobsHudFrame, 
-	BobsMinimapButtons, 
-	BobsUnitFrames, 
+	BobsExtraPowerFrame,
+	BobsHudFrame,
+	BobsMinimapButtons,
+	BobsUnitFrames,
 	BobsRotationFrame
 };
 
@@ -202,6 +202,7 @@ BobsToolbox:SetScript("OnEvent", BobsToolbox.OnEvent);
 BobsToolbox:SetScript("OnUpdate", BobsToolbox.OnUpdate);
 
 SLASH_BOBSTOOLBOX1, SLASH_BOBSTOOLBOX2= "/btb", "/bobstoolbox";
+
 function SlashCmdList.BOBSTOOLBOX(command)
 	local prefix = BobbyCode.ChatColor.DarkGreen .. BobsToolbox.Name .. " v" .. BobsToolbox.Version;
 	
